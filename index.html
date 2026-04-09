@@ -358,6 +358,9 @@
       <div class="filter-sep"></div>
       <span class="filter-label">Trabajo</span>
       <div class="chips" id="chips-jo"></div>
+      <div class="filter-sep"></div>
+      <span class="filter-label">Lugar</span>
+      <div class="chips" id="chips-lu"></div>
     </div>
   </div>
 
@@ -423,7 +426,19 @@ if (sessionStorage.getItem('oldelval_auth') === '1') {
 
 // ── APP ──
 let RAW = [], filtered = [];
-let activeYr = 'all', activeTp = 'all', activeJo = 'all';
+const LUGAR_GROUPS = [
+  {label:'Allen',pat:'allen'},{label:'Chimpay',pat:'chimpay'},
+  {label:'Río Colorado',pat:'rio.colorado|rio colorado'},
+  {label:'Pichi Mahuida',pat:'pichi.mahuida'},{label:'Algarrobo',pat:'algarrobo'},
+  {label:'Chichinales',pat:'chichinales'},{label:'Bahía Blanca',pat:'bahia.blanca'},
+  {label:'Sede Central',pat:'sede.central|sedecentral'},{label:'Medanito',pat:'medanito'},
+  {label:'Cipoletti',pat:'cipoletti|cipol'},{label:'Centenario',pat:'centenario'},
+  {label:'Neuquén',pat:'neuquen'},{label:'La Adela',pat:'la.adela'},
+  {label:'Catriel',pat:'catriel'},{label:'Zorrilla',pat:'zorrilla'},
+  {label:'Challacó',pat:'challaco'},{label:'Auca Mahuida',pat:'auca.mahuida'},
+  {label:'Butaco',pat:'butaco'},{label:'Medanos',pat:'medanos'},
+];
+let activeYr = 'all', activeTp = 'all', activeJo = 'all', activeLu = 'all';
 let sortVal = 'date-desc';
 
 async function initApp() {
@@ -456,6 +471,9 @@ function buildFilters() {
   // Jobs — clean names
   const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
   buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
+
+  // Lugares
+  buildChips('chips-lu', ['all', ...LUGAR_GROUPS.map(g => g.label)], v => { activeLu = v; apply(); });
 }
 
 function buildChips(containerId, values, onChange, icons={}) {
@@ -483,6 +501,7 @@ function apply() {
     if (activeYr !== 'all' && r.yr !== activeYr) return false;
     if (activeTp !== 'all' && r.tp !== activeTp) return false;
     if (activeJo !== 'all' && r.jo !== activeJo) return false;
+    if (activeLu !== 'all') { const g = LUGAR_GROUPS.find(x => x.label === activeLu); if (g && !new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))) return false; }
     if (q) {
       const hay = [r.nm, r.jo, r.pt, r.dt, r.tp].join(' ').toLowerCase();
       if (!hay.includes(q)) return false;
