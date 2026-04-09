@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oldelval · Archivo Audiovisual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080b12;
+      --bg2:       #0e1320;
+      --card:      #111827;
+      --card-h:    #161f30;
+      --border:    #1e2d40;
+      --border2:   #2a3a52;
+      --accent:    #f97316;
+      --accent2:   #ea580c;
+      --text:      #e2e8f0;
+      --text2:     #94a3b8;
+      --text3:     #4b5563;
+      --green:     #22c55e;
+      --blue:      #3b82f6;
+      --purple:    #a855f7;
+      --yellow:    #eab308;
+      --red:       #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #gate-card {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%; max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 80px rgba(249,115,22,0.08);
+    }
+    #gate-logo {
+      font-size: 13px; font-weight: 600; letter-spacing: 3px;
+      color: var(--accent); text-transform: uppercase; margin-bottom: 8px;
+    }
+    #gate-title {
+      font-size: 22px; font-weight: 700; color: var(--text);
+      margin-bottom: 6px;
+    }
+    #gate-sub {
+      font-size: 13px; color: var(--text2); margin-bottom: 32px;
+    }
+    #gate-input {
+      width: 100%; padding: 12px 16px;
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text); font-size: 15px;
+      outline: none; margin-bottom: 12px; transition: border .2s;
+    }
+    #gate-input:focus { border-color: var(--accent); }
+    #gate-btn {
+      width: 100%; padding: 13px;
+      background: var(--accent); border: none; border-radius: 10px;
+      color: white; font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: background .2s;
+    }
+    #gate-btn:hover { background: var(--accent2); }
+    #gate-error {
+      color: var(--red); font-size: 13px; margin-top: 10px;
+      display: none;
+    }
+
+    /* ── MAIN APP ── */
+    #app { display: none; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,11,18,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .header-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; gap: 24px;
+      height: 64px;
+    }
+    .header-brand {
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    }
+    .brand-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: 15px; font-weight: 700; letter-spacing: 1.5px;
+      color: var(--text); text-transform: uppercase;
+    }
+    .brand-sep {
+      width: 1px; height: 20px; background: var(--border2); flex-shrink: 0;
+    }
+    .brand-sub {
+      font-size: 12px; color: var(--text2); letter-spacing: 0.5px;
+    }
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--text3); pointer-events: none;
+    }
+    #search {
+      width: 100%; padding: 9px 14px 9px 40px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 14px;
+      outline: none; transition: border .2s;
+    }
+    #search:focus { border-color: var(--border2); }
+    #search::placeholder { color: var(--text3); }
+    .header-stats {
+      display: flex; gap: 16px; flex-shrink: 0;
+    }
+    .hstat {
+      font-size: 12px; color: var(--text2);
+    }
+    .hstat span { color: var(--text); font-weight: 600; }
+
+    /* ── FILTERS ── */
+    .filter-bar {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .filter-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 0; flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      color: var(--text3); text-transform: uppercase; flex-shrink: 0;
+    }
+    .filter-sep { width: 1px; height: 16px; background: var(--border); }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip {
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      border: 1px solid var(--border2); color: var(--text2);
+      cursor: pointer; transition: all .15s; user-select: none;
+      background: transparent;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active {
+      background: var(--accent); border-color: var(--accent);
+      color: white;
+    }
+    .chip-all.active { background: var(--border2); border-color: var(--border2); color: var(--text); }
+
+    /* ── MAIN GRID ── */
+    main {
+      max-width: 1280px; margin: 0 auto;
+      padding: 24px;
+    }
+    .results-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .results-count {
+      font-size: 13px; color: var(--text2);
+    }
+    .results-count strong { color: var(--text); }
+
+    .sort-select {
+      background: var(--bg2); border: 1px solid var(--border);
+      color: var(--text2); font-size: 12px; padding: 6px 10px;
+      border-radius: 8px; outline: none; cursor: pointer;
+    }
+
+    /* ── CARDS GRID ── */
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border2);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .card-top {
+      padding: 16px 18px 14px;
+      position: relative;
+    }
+    .card-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 8px; margin-bottom: 10px;
+    }
+    .card-job {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+      color: var(--text3); text-transform: uppercase; line-height: 1;
+    }
+    .type-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 3px 8px; border-radius: 6px;
+      text-transform: uppercase; flex-shrink: 0;
+    }
+    .card-name {
+      font-size: 16px; font-weight: 600; color: var(--text);
+      line-height: 1.3; margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .card-date {
+      font-size: 12px; color: var(--text2);
+    }
+    .card-path {
+      font-size: 11px; color: var(--text3);
+      font-family: 'Courier New', monospace;
+      padding: 10px 18px;
+      background: rgba(0,0,0,0.2);
+      border-top: 1px solid var(--border);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-bottom {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .card-stat {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--text2);
+    }
+    .card-stat svg { color: var(--text3); flex-shrink: 0; }
+    .card-level {
+      margin-left: auto;
+      font-size: 10px; color: var(--text3);
+      background: var(--bg); padding: 2px 7px; border-radius: 5px;
+    }
+
+    /* ── TYPE COLORS ── */
+    .tp-foto   { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .tp-raw    { background: rgba(168,85,247,0.15); color: #c084fc; }
+    .tp-audio  { background: rgba(234,179,8,0.15);  color: #fbbf24; }
+    .tp-edicion { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .tp-entrega { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .tp-none   { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+    /* ── EMPTY STATE ── */
+    #empty {
+      display: none; text-align: center;
+      padding: 80px 24px; color: var(--text2);
+    }
+    #empty h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+    #empty p { font-size: 14px; }
+
+    /* ── LOADING ── */
+    #loading {
+      text-align: center; padding: 80px;
+      color: var(--text2); font-size: 14px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── YEAR ACCENT COLORS ── */
+    .yr-2020 { border-left: 3px solid #64748b; }
+    .yr-2021 { border-left: 3px solid #475569; }
+    .yr-2022 { border-left: 3px solid #6366f1; }
+    .yr-2023 { border-left: 3px solid #3b82f6; }
+    .yr-2024 { border-left: 3px solid #22c55e; }
+    .yr-2025 { border-left: 3px solid #f97316; }
+    .yr-2026 { border-left: 3px solid #ef4444; }
+
+    @media (max-width: 640px) {
+      header { padding: 0 16px; }
+      .header-stats { display: none; }
+      main { padding: 16px; }
+      #grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ── -->
+<div id="gate">
+  <div id="gate-card">
+    <div id="gate-logo">Tronadores</div>
+    <h1 id="gate-title">Archivo Oldelval</h1>
+    <p id="gate-sub">Ingresá la contraseña para acceder al material</p>
+    <input id="gate-input" type="password" placeholder="Contraseña" autocomplete="current-password" />
+    <button id="gate-btn">Ingresar</button>
+    <p id="gate-error">Contraseña incorrecta</p>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+
+  <header>
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-dot"></div>
+        <span class="brand-name">Oldelval</span>
+        <div class="brand-sep"></div>
+        <span class="brand-sub">Archivo Audiovisual</span>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input id="search" type="text" placeholder="Buscar por trabajo, carpeta, fecha…" autocomplete="off" />
+      </div>
+      <div class="header-stats">
+        <span class="hstat">Carpetas: <span id="stat-total">—</span></span>
+        <span class="hstat">Trabajos: <span id="stat-jobs">—</span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <span class="filter-label">Año</span>
+      <div class="chips" id="chips-yr"></div>
+      <div class="filter-sep"></div>
+      <span class="filter-label">Tipo</span>
+      <div class="chips" id="chips-tp"></div>
+      <div class="filter-sep"></div>
+      <span class="filter-label">Trabajo</span>
+      <div class="chips" id="chips-jo"></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="results-header">
+      <span class="results-count" id="results-count"></span>
+      <select class="sort-select" id="sort-sel">
+        <option value="date-desc">Más reciente primero</option>
+        <option value="date-asc">Más antiguo primero</option>
+        <option value="name-asc">Nombre A→Z</option>
+        <option value="job-asc">Trabajo A→Z</option>
+      </select>
+    </div>
+
+    <div id="loading">
+      <div class="spinner"></div>
+      Cargando archivo…
+    </div>
+    <div id="grid"></div>
+    <div id="empty">
+      <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 16px;color:#4b5563">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <h3>Sin resultados</h3>
+      <p>Probá con otros filtros o términos de búsqueda</p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+// ── CONFIG ──
+const PASSWORD = 'oldelval';
+const DATA_URL = 'data.json';
+
+// ── GATE ──
+const gateEl   = document.getElementById('gate');
+const appEl    = document.getElementById('app');
+const gateInput = document.getElementById('gate-input');
+const gateBtn   = document.getElementById('gate-btn');
+const gateErr   = document.getElementById('gate-error');
+
+function tryLogin() {
+  if (gateInput.value === PASSWORD) {
+    sessionStorage.setItem('oldelval_auth', '1');
+    gateEl.style.display = 'none';
+    appEl.style.display  = 'block';
+    initApp();
+  } else {
+    gateErr.style.display = 'block';
+    gateInput.value = '';
+    gateInput.focus();
+  }
+}
+gateBtn.addEventListener('click', tryLogin);
+gateInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+if (sessionStorage.getItem('oldelval_auth') === '1') {
+  gateEl.style.display = 'none';
+  appEl.style.display  = 'block';
+  initApp();
+}
+
+// ── APP ──
+let RAW = [], filtered = [];
+let activeYr = 'all', activeTp = 'all', activeJo = 'all';
+let sortVal = 'date-desc';
+
+async function initApp() {
+  try {
+    const r = await fetch(DATA_URL + '?t=' + Date.now());
+    RAW = await r.json();
+    document.getElementById('loading').style.display = 'none';
+    buildFilters();
+    apply();
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<p style="color:#ef4444">Error al cargar datos</p>';
+  }
+}
+
+function buildFilters() {
+  // Stats
+  const jobs = new Set(RAW.map(r => r.jo).filter(Boolean));
+  document.getElementById('stat-total').textContent = RAW.length.toLocaleString('es');
+  document.getElementById('stat-jobs').textContent  = jobs.size;
+
+  // Years
+  const years = [...new Set(RAW.map(r => r.yr).filter(Boolean))].sort((a,b) => b-a);
+  buildChips('chips-yr', ['all', ...years], v => { activeYr = v; apply(); });
+
+  // Types
+  const types = [...new Set(RAW.map(r => r.tp).filter(Boolean))].sort();
+  buildChips('chips-tp', ['all', ...types], v => { activeTp = v; apply(); },
+    { 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦' });
+
+  // Jobs — clean names
+  const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
+  buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
+}
+
+function buildChips(containerId, values, onChange, icons={}) {
+  const wrap = document.getElementById(containerId);
+  values.forEach(v => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (v === 'all' ? ' chip-all active' : '');
+    chip.dataset.val = v;
+    chip.textContent = (icons[v] ? icons[v] + ' ' : '') + (v === 'all' ? 'Todos' : v);
+    chip.addEventListener('click', () => {
+      wrap.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      onChange(v);
+    });
+    wrap.appendChild(chip);
+  });
+}
+
+document.getElementById('search').addEventListener('input', () => apply());
+document.getElementById('sort-sel').addEventListener('change', e => { sortVal = e.target.value; apply(); });
+
+function apply() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  filtered = RAW.filter(r => {
+    if (activeYr !== 'all' && r.yr !== activeYr) return false;
+    if (activeTp !== 'all' && r.tp !== activeTp) return false;
+    if (activeJo !== 'all' && r.jo !== activeJo) return false;
+    if (q) {
+      const hay = [r.nm, r.jo, r.pt, r.dt, r.tp].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  filtered.sort((a,b) => {
+    if (sortVal === 'date-desc') return (b.dt||'').localeCompare(a.dt||'');
+    if (sortVal === 'date-asc')  return (a.dt||'').localeCompare(b.dt||'');
+    if (sortVal === 'name-asc')  return (a.nm||'').localeCompare(b.nm||'');
+    if (sortVal === 'job-asc')   return (a.jo||'').localeCompare(b.jo||'');
+    return 0;
+  });
+
+  render();
+}
+
+function tpClass(tp) {
+  const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega' };
+  return m[tp] || 'tp-none';
+}
+
+function fmtDate(dt) {
+  if (!dt) return '';
+  const [y,m,d] = dt.split('-');
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(d)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function cleanName(nm, jo) {
+  // Remove redundant client/job prefix for cleaner display
+  return nm.replace(/^OLDELVAL[_\s]*/i,'').replace(/^OLD[_\s]*/i,'');
+}
+
+function render() {
+  const grid  = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const count = document.getElementById('results-count');
+
+  count.innerHTML = `<strong>${filtered.length.toLocaleString('es')}</strong> resultado${filtered.length!==1?'s':''}`;
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(r => {
+    const name    = r.nm || '—';
+    const job     = r.jo || '';
+    const date    = fmtDate(r.dt);
+    const yr      = r.yr || '';
+    const tp      = r.tp || '';
+    const path    = r.pt || '';
+    const folders = r.fd ?? 0;
+    const files   = r.fi ?? 0;
+    const lvl     = r.lv ?? 0;
+    const yrClass = yr ? `yr-${yr}` : '';
+    const tpCls   = tpClass(tp);
+
+    return `
+    <div class="card ${yrClass}" title="${path}">
+      <div class="card-top">
+        <div class="card-header">
+          <span class="card-job">${job}</span>
+          ${tp ? `<span class="type-badge ${tpCls}">${tp}</span>` : ''}
+        </div>
+        <div class="card-name">${name}</div>
+        ${date ? `<div class="card-date">📅 ${date}</div>` : ''}
+      </div>
+      <div class="card-path">${path}</div>
+      <div class="card-bottom">
+        <span class="card-stat">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+          ${folders} carpeta${folders!==1?'s':''}
+        </span>
+        ${files > 0 ? `
+        <span class="card-stat">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+          </svg>
+          ${files} archivo${files!==1?'s':''}
+        </span>` : ''}
+        <span class="card-level">nv.${lvl}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
