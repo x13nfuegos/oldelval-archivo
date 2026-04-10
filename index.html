@@ -208,7 +208,28 @@
     .chart-card.wide { grid-column: 1 / -1; }
     .chart-title { font-size: 0.8rem; font-weight: 600; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
     .chart-wrap { position: relative; }
-  </style>
+  
+    /* ── VIMEO TAB ── */
+    #tab-vimeo { padding:20px; }
+    .vimeo-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+    #vimeo-search { flex:1; min-width:200px; padding:9px 14px; background:var(--bg2); border:1px solid var(--border); color:var(--text1); border-radius:8px; font-size:0.88rem; outline:none; }
+    #vimeo-search:focus { border-color:var(--accent); }
+    #vimeo-count { color:var(--text3); font-size:0.82rem; white-space:nowrap; }
+    #vimeo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+    .vimeo-card { background:var(--bg2); border-radius:8px; overflow:hidden; border:1px solid var(--border); transition:transform 0.15s,border-color 0.15s; }
+    .vimeo-card:hover { transform:translateY(-2px); border-color:var(--accent); }
+    .vimeo-thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:#0a0a0a; cursor:pointer; }
+    .vimeo-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .vimeo-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; font-size:2.2rem; }
+    .vimeo-thumb:hover .vimeo-play-icon { opacity:1; }
+    .vimeo-thumb iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
+    .vimeo-info { padding:9px 11px 10px; }
+    .vimeo-title { font-size:0.8rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text1); }
+    .vimeo-meta { font-size:0.72rem; color:var(--text3); }
+    #vimeo-more-btn { display:none; margin:22px auto 4px; padding:9px 30px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.88rem; font-family:inherit; }
+    #vimeo-more-btn:hover { opacity:0.85; }
+    .vimeo-spinner { text-align:center; padding:40px; color:var(--text3); font-size:0.9rem; }
+</style>
 </head>
 <body>
 
@@ -244,6 +265,7 @@
       <button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">📁 Archivo</button>
       <button class="tab-btn" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</button>
       <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</button>
+    <button class="tab-btn" data-tab="vimeo" onclick="switchTab('vimeo')">🎬 Vimeo</button>
     </nav>
   </header>
 
@@ -305,7 +327,16 @@
         <div class="chart-wrap"><canvas id="chartMonth" height="80"></canvas></div>
       </div>
     </div>
-  </div>
+  
+    <div id="tab-vimeo" style="display:none">
+      <div class="vimeo-toolbar">
+        <input id="vimeo-search" type="text" placeholder="Buscar videos en Vimeo..." autocomplete="off" />
+        <span id="vimeo-count"></span>
+      </div>
+      <div id="vimeo-grid"></div>
+      <button id="vimeo-more-btn" onclick="loadVimeoPage()">Cargar más</button>
+    </div>
+</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -388,6 +419,8 @@ function switchTab(tab) {
   document.getElementById('tab-archivo').style.display    = tab === 'archivo'   ? 'block' : 'none';
   document.getElementById('tab-mapa').style.display       = tab === 'mapa'      ? 'block' : 'none';
   document.getElementById('tab-analytics').style.display  = tab === 'analytics' ? 'block' : 'none';
+  document.getElementById('tab-vimeo').style.display = tab === 'vimeo' ? 'block' : 'none';
+  if (tab === 'vimeo') initVimeoTab();
 
   if (tab === 'mapa' && RAW.length) initMap();
   if (tab === 'analytics' && RAW.length && !chartsBuilt) buildCharts();
@@ -677,6 +710,58 @@ function buildCharts() {
     }
   });
 }
+
+
+  // ── VIMEO TAB ────────────────────────────────────────────
+  const VTOK = 'bd437b6a1b19946eca0d8929c2f64db9';
+  let _vPage = 1, _vQuery = '', _vBusy = false, _vInited = false;
+
+  function initVimeoTab() {
+    if (_vInited) return; _vInited = true;
+    loadVimeoPage(true);
+    let timer;
+    document.getElementById('vimeo-search').addEventListener('input', e => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { _vQuery = e.target.value; _vPage = 1; loadVimeoPage(true); }, 400);
+    });
+  }
+
+  async function loadVimeoPage(reset) {
+    if (_vBusy) return; _vBusy = true;
+    const grid = document.getElementById('vimeo-grid');
+    const btn  = document.getElementById('vimeo-more-btn');
+    if (reset) { _vPage = 1; grid.innerHTML = '<div class="vimeo-spinner">Cargando...</div>'; btn.style.display='none'; }
+    const q = _vQuery ? '&query=' + encodeURIComponent(_vQuery) : '';
+    const url = 'https://api.vimeo.com/me/videos?per_page=50&page=' + _vPage + q +
+                '&fields=uri,name,duration,created_time,pictures';
+    const d = await fetch(url, { headers:{ Authorization:'bearer ' + VTOK }}).then(r=>r.json());
+    document.getElementById('vimeo-count').textContent = d.total.toLocaleString() + ' videos';
+    if (reset) grid.innerHTML = '';
+    (d.data||[]).forEach(v => {
+      const id = v.uri.split('/').pop();
+      const sz = v.pictures && v.pictures.sizes;
+      const thumb = sz ? sz[Math.min(3,sz.length-1)].link : '';
+      const dur = Math.floor(v.duration/60)+':'+String(v.duration%60).padStart(2,'0');
+      const date = (v.created_time||'').slice(0,10);
+      const c = document.createElement('div');
+      c.className = 'vimeo-card';
+      c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
+        '<img src="' + thumb + '" loading="lazy">' +
+        '<div class="vimeo-play-icon">&#9654;</div></div>' +
+        '<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
+        '<div class="vimeo-meta">' + dur + ' &nbsp;·&nbsp; ' + date + '</div></div>';
+      grid.appendChild(c);
+    });
+    const shown = _vPage * 50;
+    btn.style.display = shown < d.total ? 'block' : 'none';
+    if (shown < d.total) _vPage++;
+    _vBusy = false;
+  }
+
+  function playV(id, el) {
+    el.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id +
+      '?autoplay=1" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
+  }
 </script>
 </body>
 </html>
