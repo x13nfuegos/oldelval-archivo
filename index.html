@@ -749,7 +749,7 @@ function buildCharts() {
         '<img src="' + thumb + '" loading="lazy">' +
         '<div class="vimeo-play-icon">&#9654;</div></div>' +
         '<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
-        '<div class="vimeo-meta">' + dur + ' &nbsp;·&nbsp; ' + date + (v.stats&&v.stats.plays?' &nbsp;·&nbsp; ▶ '+v.stats.plays.toLocaleString():'')+  '</div>'+(v.description?'<div class="vimeo-desc" title="'+v.description.replace(/"/g,\'\')+'">' + v.description.slice(0,100) + (v.description.length>100?'…':'')+  '</div>': '') + '</div>';
+        '<div class="vimeo-meta">' + dur + ' &nbsp;·&nbsp; ' + date + (v.stats&&v.stats.plays?' &nbsp;·&nbsp; ▶ '+v.stats.plays.toLocaleString():'')+  '</div>'+(v.description?'<div class="vimeo-desc" title="'+v.description.+'">' + v.description.slice(0,100) + (v.description.length>100?'…':'')+  '</div>': '') + '</div>';
       grid.appendChild(c);
     });
     const shown = _vPage * 50;
