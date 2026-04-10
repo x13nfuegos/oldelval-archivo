@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oldelval Â· Archivo Audiovisual</title>
+  <title>Oldelval · Archivo Audiovisual</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -31,7 +31,7 @@
 
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* âââ GATE âââ */
+    /* ─── GATE ─── */
     #gate {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       background: radial-gradient(ellipse at center, #0f1a2e 0%, var(--bg) 70%);
@@ -58,7 +58,7 @@
     .gate-btn:hover { background: var(--accent2); }
     .gate-err { font-size: 0.8rem; color: var(--red); margin-top: 8px; display: none; }
 
-    /* âââ HEADER âââ */
+    /* ─── HEADER ─── */
     header {
       position: sticky; top: 0; z-index: 100;
       background: rgba(8,11,18,0.95); backdrop-filter: blur(12px);
@@ -84,7 +84,7 @@
     .stats { display: flex; gap: 16px; font-size: 0.72rem; color: var(--text2); white-space: nowrap; }
     .stats span { color: var(--text); font-weight: 600; }
 
-    /* âââ TAB NAV âââ */
+    /* ─── TAB NAV ─── */
     .tab-nav { display: flex; gap: 4px; padding-bottom: 0; }
     .tab-btn {
       padding: 8px 18px; font-size: 0.8rem; font-weight: 500; font-family: inherit;
@@ -95,7 +95,7 @@
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* âââ FILTERS âââ */
+    /* ─── FILTERS ─── */
     .filters { padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
     .filter-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
     .filter-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); white-space: nowrap; padding-top: 6px; min-width: 52px; }
@@ -109,7 +109,7 @@
     .chip:hover { border-color: var(--border2); color: var(--text); }
     .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    /* âââ RESULTS âââ */
+    /* ─── RESULTS ─── */
     .results-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 20px 10px; font-size: 0.8rem; color: var(--text2);
@@ -121,7 +121,7 @@
     }
     #loading { padding: 40px; text-align: center; color: var(--text2); font-size: 0.9rem; }
 
-    /* âââ CARDS âââ */
+    /* ─── CARDS ─── */
     main { padding: 0 20px 40px; }
     #grid {
       display: grid;
@@ -166,7 +166,7 @@
     .card-stat { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--text3); }
     .card-level { margin-left: auto; font-size: 0.65rem; color: var(--text3); background: var(--bg2); padding: 2px 7px; border-radius: 10px; }
 
-    /* âââ MAP TAB âââ */
+    /* ─── MAP TAB ─── */
     #tab-mapa { display: none; }
     #map { height: calc(100vh - 120px); width: 100%; }
     .leaflet-popup-content-wrapper {
@@ -190,7 +190,7 @@
     .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     .legend-dot { border-radius: 50%; flex-shrink: 0; }
 
-    /* âââ ANALYTICS TAB âââ */
+    /* ─── ANALYTICS TAB ─── */
     #tab-analytics { display: none; padding: 24px 20px 40px; }
     .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 28px; }
     .stat-card {
@@ -216,10 +216,10 @@
 <div id="gate">
   <div class="gate-box">
     <img src="oldelval_logo.png" alt="Oldelval" style="width:200px;margin-bottom:20px;mix-blend-mode:screen;" />
-    <p class="gate-sub">IngresÃ¡ la contraseÃ±a para acceder al material</p>
-    <input id="gateInput" class="gate-input" type="password" placeholder="ContraseÃ±a" />
+    <p class="gate-sub">Ingresá la contraseña para acceder al material</p>
+    <input id="gateInput" class="gate-input" type="password" placeholder="Contraseña" />
     <button class="gate-btn" onclick="tryLogin()">Ingresar</button>
-    <p class="gate-err" id="gateErr">ContraseÃ±a incorrecta</p>
+    <p class="gate-err" id="gateErr">Contraseña incorrecta</p>
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;">
       <span style="font-size:0.65rem;color:var(--text3);">por</span>
       <img src="logo.png" alt="Tronadores" style="height:20px;mix-blend-mode:screen;" />
@@ -238,12 +238,12 @@
         <svg class="search-ico" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input id="searchInput" type="text" placeholder="Buscar por trabajo, carpeta, fecha..." oninput="apply()" />
       </div>
-      <div class="stats">Carpetas: <span id="stat-total">â</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">â</span></div>
+      <div class="stats">Carpetas: <span id="stat-total">—</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">—</span></div>
     </div>
     <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">ð Archivo</button>
-      <button class="tab-btn" data-tab="mapa" onclick="switchTab('mapa')">ðº Mapa</button>
-      <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">ð Analytics</button>
+      <button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">📁 Archivo</button>
+      <button class="tab-btn" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</button>
+      <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</button>
     </nav>
   </header>
 
@@ -251,7 +251,7 @@
   <div id="tab-archivo">
     <div class="filters">
       <div class="filter-row">
-        <span class="filter-label">AÃ±o</span>
+        <span class="filter-label">Año</span>
         <div class="chips" id="chips-yr"></div>
         <div class="filter-sep"></div>
         <span class="filter-label">Tipo</span>
@@ -267,14 +267,14 @@
     <div class="results-header">
       <span id="results-count">Cargando...</span>
       <select class="sort-select" id="sortSelect" onchange="apply()">
-        <option value="date-desc">MÃ¡s reciente primero</option>
-        <option value="date-asc">MÃ¡s antiguo primero</option>
-        <option value="name-az">Nombre AâZ</option>
-        <option value="job-az">Trabajo AâZ</option>
+        <option value="date-desc">Más reciente primero</option>
+        <option value="date-asc">Más antiguo primero</option>
+        <option value="name-az">Nombre A→Z</option>
+        <option value="job-az">Trabajo A→Z</option>
       </select>
     </div>
     <main>
-      <div id="loading">Cargando datosâ¦</div>
+      <div id="loading">Cargando datos…</div>
       <div id="grid"></div>
     </main>
   </div>
@@ -289,7 +289,7 @@
     <div class="analytics-grid" id="stat-cards"></div>
     <div class="charts-grid">
       <div class="chart-card wide">
-        <div class="chart-title">Registros por AÃ±o</div>
+        <div class="chart-title">Registros por Año</div>
         <div class="chart-wrap"><canvas id="chartYear" height="80"></canvas></div>
       </div>
       <div class="chart-card">
@@ -316,14 +316,14 @@ const DATA_URL = 'data.json';
 
 const LUGAR_GROUPS = [
   {label:'Allen',pat:'allen'},{label:'Chimpay',pat:'chimpay'},
-  {label:'RÃ­o Colorado',pat:'rio.colorado|rio colorado'},
+  {label:'Río Colorado',pat:'rio.colorado|rio colorado'},
   {label:'Pichi Mahuida',pat:'pichi.mahuida'},{label:'Algarrobo',pat:'algarrobo'},
-  {label:'Chichinales',pat:'chichinales'},{label:'BahÃ­a Blanca',pat:'bahia.blanca'},
+  {label:'Chichinales',pat:'chichinales'},{label:'Bahía Blanca',pat:'bahia.blanca'},
   {label:'Sede Central',pat:'sede.central|sedecentral'},{label:'Medanito',pat:'medanito'},
   {label:'Cipoletti',pat:'cipoletti|cipol'},{label:'Centenario',pat:'centenario'},
-  {label:'NeuquÃ©n',pat:'neuquen'},{label:'La Adela',pat:'la.adela'},
+  {label:'Neuquén',pat:'neuquen'},{label:'La Adela',pat:'la.adela'},
   {label:'Catriel',pat:'catriel'},{label:'Zorrilla',pat:'zorrilla'},
-  {label:'ChallacÃ³',pat:'challaco'},{label:'Auca Mahuida',pat:'auca.mahuida'},
+  {label:'Challacó',pat:'challaco'},{label:'Auca Mahuida',pat:'auca.mahuida'},
   {label:'Butaco',pat:'butaco'},{label:'Medanos',pat:'medanos'},
 ];
 
@@ -331,20 +331,20 @@ const LUGAR_GROUPS = [
 const LUGAR_COORDS = {
   'Allen':         [-38.974, -67.833],
   'Chimpay':       [-39.167, -66.150],
-  'RÃ­o Colorado':  [-38.997, -64.096],
+  'Río Colorado':  [-38.997, -64.096],
   'Pichi Mahuida': [-39.433, -65.500],
   'Algarrobo':     [-38.980, -67.950],
   'Chichinales':   [-38.967, -68.067],
-  'BahÃ­a Blanca':  [-38.718, -62.266],
+  'Bahía Blanca':  [-38.718, -62.266],
   'Sede Central':  [-38.974, -67.833],
   'Medanito':      [-38.390, -68.370],
   'Cipoletti':     [-38.942, -68.000],
   'Centenario':    [-38.817, -68.100],
-  'NeuquÃ©n':       [-38.952, -68.059],
+  'Neuquén':       [-38.952, -68.059],
   'La Adela':      [-38.983, -64.083],
   'Catriel':       [-37.850, -67.517],
   'Zorrilla':      [-39.010, -67.780],
-  'ChallacÃ³':      [-38.550, -68.350],
+  'Challacó':      [-38.550, -68.350],
   'Auca Mahuida':  [-37.733, -68.917],
   'Butaco':        [-37.600, -70.700],
   'Medanos':       [-38.833, -67.950],
@@ -383,7 +383,7 @@ if (sessionStorage.getItem('oldelval_auth') === '1') {
   initApp();
 }
 
-// âââ TAB SWITCHING âââ
+// ─── TAB SWITCHING ───
 function switchTab(tab) {
   activeTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
@@ -395,7 +395,7 @@ function switchTab(tab) {
   if (tab === 'analytics' && RAW.length && !chartsBuilt) buildCharts();
 }
 
-// âââ DATA LOAD âââ
+// ─── DATA LOAD ───
 async function initApp() {
   try {
     const res = await fetch(DATA_URL);
@@ -417,7 +417,7 @@ function buildFilters() {
 
   const types = [...new Set(RAW.map(r => r.tp).filter(Boolean))].sort();
   buildChips('chips-tp', ['all', ...types], v => { activeTp = v; apply(); },
-    { 'Foto':'ð·', 'RAW':'ð', 'Audio':'ð§', 'EdiciÃ³n':'âï¸', 'Entrega':'ð¦' });
+    { 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦' });
 
   const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
   buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
@@ -441,11 +441,11 @@ function buildChips(containerId, values, onChange, icons={}) {
 }
 
 function tpClass(tp) {
-  const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','EdiciÃ³n':'tp-edicion','Entrega':'tp-entrega' };
+  const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega' };
   return m[tp] || '';
 }
 
-// âââ APPLY FILTERS âââ
+// ─── APPLY FILTERS ───
 function apply() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   sortVal = document.getElementById('sortSelect').value;
@@ -491,7 +491,7 @@ function apply() {
           ${tp ? `<span class="type-badge ${tpCls}">${tp}</span>` : ''}
         </div>
         <div class="card-name">${name}</div>
-        ${date ? `<div class="card-date">ð ${date}</div>` : ''}
+        ${date ? `<div class="card-date">📅 ${date}</div>` : ''}
       </div>
       <div class="card-path">${path ? `<a class="dbx-link" href="https://www.dropbox.com/work${path}" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${path}</a>` : ''}</div>
       <div class="card-bottom">
@@ -503,7 +503,7 @@ function apply() {
   }).join('');
 }
 
-// âââ MAP âââ
+// ─── MAP ───
 function initMap() {
   if (mapInstance) { mapInstance.invalidateSize(); return; }
   mapInstance = L.map('map', { center: [-38.8, -67.5], zoom: 7, preferCanvas: true });
@@ -537,15 +537,15 @@ function initMap() {
   legend.onAdd = () => {
     const div = L.DomUtil.create('div', 'map-legend');
     div.innerHTML = `<div class="map-legend-title">Referencias</div>
-      <div class="legend-item"><div class="legend-dot" style="width:10px;height:10px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>1â10 registros</div>
-      <div class="legend-item"><div class="legend-dot" style="width:18px;height:18px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>10â30 registros</div>
+      <div class="legend-item"><div class="legend-dot" style="width:10px;height:10px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>1–10 registros</div>
+      <div class="legend-item"><div class="legend-dot" style="width:18px;height:18px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>10–30 registros</div>
       <div class="legend-item"><div class="legend-dot" style="width:28px;height:28px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>30+ registros</div>`;
     return div;
   };
   legend.addTo(mapInstance);
 }
 
-// âââ ANALYTICS âââ
+// ─── ANALYTICS ───
 function buildCharts() {
   chartsBuilt = true;
   const FONT = 'Inter, sans-serif';
@@ -562,7 +562,7 @@ function buildCharts() {
     {val: totalFolders.toLocaleString('es'), lbl: 'Carpetas registradas'},
     {val: totalFiles.toLocaleString('es'), lbl: 'Archivos indexados'},
     {val: totalFolderSubdirs.toLocaleString('es'), lbl: 'Subcarpetas'},
-    {val: years.size, lbl: 'AÃ±os de archivo'},
+    {val: years.size, lbl: 'Años de archivo'},
     {val: lugaresCovered, lbl: 'Ubicaciones'},
     {val: new Set(RAW.map(r=>r.jo).filter(Boolean)).size, lbl: 'Proyectos'},
   ];
@@ -577,7 +577,7 @@ function buildCharts() {
   };
   const gridColor = 'rgba(30,45,64,0.8)';
 
-  // Chart 1: Por aÃ±o
+  // Chart 1: Por año
   const yrCounts = {};
   RAW.forEach(r => { if(r.yr) yrCounts[r.yr] = (yrCounts[r.yr]||0)+1; });
   const yrLabels = Object.keys(yrCounts).sort();
