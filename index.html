@@ -625,7 +625,7 @@ function buildCharts() {
   // Chart 3: Por lugar (horizontal bar)
   const lugarData = LUGAR_GROUPS.map(g => ({
     label: g.label,
-    count: RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||'')))\.length
+    count: RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))).length
   })).filter(x => x.count > 0).sort((a,b) => b.count - a.count).slice(0,12);
   new Chart(document.getElementById('chartLugar'), {
     type: 'bar',
