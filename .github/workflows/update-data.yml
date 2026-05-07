@@ -1,0 +1,40 @@
+name: Update data.json from Dropbox
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # daily at 06:00 UTC (~03:00 ART)
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci || npm install
+
+      - name: Generate data.json
+        env:
+          DROPBOX_ACCESS_TOKEN: ${{ secrets.DROPBOX_ACCESS_TOKEN }}
+          DROPBOX_TEAM_MEMBER_ID: ${{ secrets.DROPBOX_TEAM_MEMBER_ID }}
+          DROPBOX_ROOT_PATH: ${{ secrets.DROPBOX_ROOT_PATH }}
+        run: node scripts/generate-data.js
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- data.json; then
+            echo "No changes to data.json"
+            exit 0
+          fi
+          git config user.name "oldelval-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data.json
+          git commit -m "chore: refresh data.json from Dropbox"
+          git push
