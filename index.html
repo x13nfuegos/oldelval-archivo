@@ -1,342 +1,342 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oldelval · Archivo Audiovisual</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oldelval · Archivo Audiovisual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg:        #080b12;
-      --bg2:       #0e1320;
-      --card:      #111827;
-      --card-h:    #161f30;
-      --border:    #1e2d40;
-      --border2:   #2a3a52;
-      --accent:    #f97316;
-      --accent2:   #ea580c;
-      --text:      #e2e8f0;
-      --text2:     #94a3b8;
-      --text3:     #4b5563;
-      --green:     #22c55e;
-      --blue:      #3b82f6;
-      --purple:    #a855f7;
-      --yellow:    #eab308;
-      --red:       #ef4444;
-    }
+:root {
+--bg: #080b12;
+--bg2: #0e1320;
+--card: #111827;
+--card-h: #161f30;
+--border: #1e2d40;
+--border2: #2a3a52;
+--accent: #f97316;
+--accent2: #ea580c;
+--text: #e2e8f0;
+--text2: #94a3b8;
+--text3: #4b5563;
+--green: #22c55e;
+--blue: #3b82f6;
+--purple: #a855f7;
+--yellow: #eab308;
+--red: #ef4444;
+}
 
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* ─── GATE ─── */
-    #gate {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(ellipse at center, #0f1a2e 0%, var(--bg) 70%);
-    }
-    .gate-box {
-      background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
-      padding: 40px 48px; text-align: center; width: 380px; max-width: 90vw;
-      box-shadow: 0 0 60px rgba(249,115,22,0.06);
-    }
-    .gate-brand { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; }
-    .gate-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-    .gate-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 28px; }
-    .gate-input {
-      width: 100%; padding: 11px 16px; background: var(--card); border: 1px solid var(--border2);
-      border-radius: 8px; color: var(--text); font-size: 0.95rem; font-family: inherit;
-      outline: none; transition: border-color 0.2s;
-    }
-    .gate-input:focus { border-color: var(--accent); }
-    .gate-btn {
-      width: 100%; margin-top: 12px; padding: 12px; background: var(--accent);
-      border: none; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: 600;
-      font-family: inherit; cursor: pointer; transition: background 0.2s;
-    }
-    .gate-btn:hover { background: var(--accent2); }
-    .gate-err { font-size: 0.8rem; color: var(--red); margin-top: 8px; display: none; }
+/* ─── GATE ─── */
+#gate {
+min-height: 100vh; display: flex; align-items: center; justify-content: center;
+background: radial-gradient(ellipse at center, #0f1a2e 0%, var(--bg) 70%);
+}
+.gate-box {
+background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
+padding: 40px 48px; text-align: center; width: 380px; max-width: 90vw;
+box-shadow: 0 0 60px rgba(249,115,22,0.06);
+}
+.gate-brand { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; }
+.gate-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+.gate-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 28px; }
+.gate-input {
+width: 100%; padding: 11px 16px; background: var(--card); border: 1px solid var(--border2);
+border-radius: 8px; color: var(--text); font-size: 0.95rem; font-family: inherit;
+outline: none; transition: border-color 0.2s;
+}
+.gate-input:focus { border-color: var(--accent); }
+.gate-btn {
+width: 100%; margin-top: 12px; padding: 12px; background: var(--accent);
+border: none; border-radius: 8px; color: #fff; font-size: 0.95rem; font-weight: 600;
+font-family: inherit; cursor: pointer; transition: background 0.2s;
+}
+.gate-btn:hover { background: var(--accent2); }
+.gate-err { font-size: 0.8rem; color: var(--red); margin-top: 8px; display: none; }
 
-    /* ─── HEADER ─── */
-    header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(8,11,18,0.95); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 20px;
-    }
-    .header-top {
-      display: flex; align-items: center; gap: 14px;
-      padding: 12px 0 8px;
-    }
-    .logo { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
-    .brand-name { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em; }
-    .brand-sub { font-size: 0.7rem; color: var(--text2); margin-left: 4px; }
-    .search-wrap { flex: 1; position: relative; }
-    .search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
-    #searchInput {
-      width: 100%; padding: 8px 12px 8px 36px;
-      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-      color: var(--text); font-size: 0.85rem; font-family: inherit; outline: none;
-      transition: border-color 0.2s;
-    }
-    #searchInput:focus { border-color: var(--accent); }
-    .stats { display: flex; gap: 16px; font-size: 0.72rem; color: var(--text2); white-space: nowrap; }
-    .stats span { color: var(--text); font-weight: 600; }
+/* ─── HEADER ─── */
+header {
+position: sticky; top: 0; z-index: 100;
+background: rgba(8,11,18,0.95); backdrop-filter: blur(12px);
+border-bottom: 1px solid var(--border);
+padding: 0 20px;
+}
+.header-top {
+display: flex; align-items: center; gap: 14px;
+padding: 12px 0 8px;
+}
+.logo { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
+.brand-name { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em; }
+.brand-sub { font-size: 0.7rem; color: var(--text2); margin-left: 4px; }
+.search-wrap { flex: 1; position: relative; }
+.search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+#searchInput {
+width: 100%; padding: 8px 12px 8px 36px;
+background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+color: var(--text); font-size: 0.85rem; font-family: inherit; outline: none;
+transition: border-color 0.2s;
+}
+#searchInput:focus { border-color: var(--accent); }
+.stats { display: flex; gap: 16px; font-size: 0.72rem; color: var(--text2); white-space: nowrap; }
+.stats span { color: var(--text); font-weight: 600; }
 
-    /* ─── TAB NAV ─── */
-    .tab-nav { display: flex; gap: 4px; padding-bottom: 0; }
-    .tab-btn {
-      padding: 8px 18px; font-size: 0.8rem; font-weight: 500; font-family: inherit;
-      background: none; border: none; border-bottom: 2px solid transparent;
-      color: var(--text2); cursor: pointer; transition: color 0.15s, border-color 0.15s;
-      white-space: nowrap;
-    }
-    .tab-btn:hover { color: var(--text); }
-    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+/* ─── TAB NAV ─── */
+.tab-nav { display: flex; gap: 4px; padding-bottom: 0; }
+.tab-btn {
+padding: 8px 18px; font-size: 0.8rem; font-weight: 500; font-family: inherit;
+background: none; border: none; border-bottom: 2px solid transparent;
+color: var(--text2); cursor: pointer; transition: color 0.15s, border-color 0.15s;
+white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* ─── FILTERS ─── */
-    .filters { padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
-    .filter-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
-    .filter-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); white-space: nowrap; padding-top: 6px; min-width: 52px; }
-    .filter-sep { width: 100%; height: 0; }
-    .chips { display: flex; flex-wrap: wrap; gap: 5px; }
-    .chip {
-      padding: 4px 11px; font-size: 0.72rem; font-family: inherit; font-weight: 500;
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-      color: var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap;
-    }
-    .chip:hover { border-color: var(--border2); color: var(--text); }
-    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* ─── FILTERS ─── */
+.filters { padding: 10px 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.filter-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.filter-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); white-space: nowrap; padding-top: 6px; min-width: 52px; }
+.filter-sep { width: 100%; height: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+padding: 4px 11px; font-size: 0.72rem; font-family: inherit; font-weight: 500;
+background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+color: var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.chip:hover { border-color: var(--border2); color: var(--text); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    /* ─── RESULTS ─── */
-    .results-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px 10px; font-size: 0.8rem; color: var(--text2);
-    }
-    .sort-select {
-      background: var(--card); border: 1px solid var(--border); color: var(--text);
-      font-size: 0.75rem; font-family: inherit; padding: 5px 10px; border-radius: 6px;
-      outline: none; cursor: pointer;
-    }
-    #loading { padding: 40px; text-align: center; color: var(--text2); font-size: 0.9rem; }
+/* ─── RESULTS ─── */
+.results-header {
+display: flex; align-items: center; justify-content: space-between;
+padding: 14px 20px 10px; font-size: 0.8rem; color: var(--text2);
+}
+.sort-select {
+background: var(--card); border: 1px solid var(--border); color: var(--text);
+font-size: 0.75rem; font-family: inherit; padding: 5px 10px; border-radius: 6px;
+outline: none; cursor: pointer;
+}
+#loading { padding: 40px; text-align: center; color: var(--text2); font-size: 0.9rem; }
 
-    /* ─── CARDS ─── */
-    main { padding: 0 20px 40px; }
-    #grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px;
-    }
-    .card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-      padding: 14px 16px; cursor: default; transition: border-color 0.15s, background 0.15s;
-      border-left-width: 3px; border-left-style: solid; border-left-color: var(--border);
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .card:hover { background: var(--card-h); border-color: var(--border2); }
-    .yr-2020 { border-left-color: #6366f1; }
-    .yr-2021 { border-left-color: #06b6d4; }
-    .yr-2022 { border-left-color: #8b5cf6; }
-    .yr-2023 { border-left-color: #3b82f6; }
-    .yr-2024 { border-left-color: #22c55e; }
-    .yr-2025 { border-left-color: #f97316; }
-    .yr-2026 { border-left-color: #f43f5e; }
-    .card-top { display: flex; flex-direction: column; gap: 4px; }
-    .card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .card-job { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); }
-    .type-badge { padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
-    .tp-foto   { background: rgba(59,130,246,0.15); color: #60a5fa; }
-    .tp-raw    { background: rgba(168,85,247,0.15); color: #c084fc; }
-    .tp-audio  { background: rgba(234,179,8,0.15);  color: #fbbf24; }
-    .tp-edicion { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .tp-entrega { background: rgba(249,115,22,0.15); color: #fb923c; }
-    .card-name { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.3; }
-    .card-date { font-size: 0.72rem; color: var(--text2); }
-    .card-path {}
-    .dbx-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      color: var(--text3); font-size: 0.7rem; text-decoration: none;
-      transition: color 0.15s; word-break: break-all;
-    }
-    .dbx-link:hover { color: #0061fe; }
-    .dbx-link svg { flex-shrink: 0; fill: #0061fe; opacity: 0.7; }
-    .dbx-link:hover svg { opacity: 1; }
-    .card-bottom { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; }
-    .card-stat { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--text3); }
-    .card-level { margin-left: auto; font-size: 0.65rem; color: var(--text3); background: var(--bg2); padding: 2px 7px; border-radius: 10px; }
+/* ─── CARDS ─── */
+main { padding: 0 20px 40px; }
+#grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 12px;
+}
+.card {
+background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+padding: 14px 16px; cursor: default; transition: border-color 0.15s, background 0.15s;
+border-left-width: 3px; border-left-style: solid; border-left-color: var(--border);
+display: flex; flex-direction: column; gap: 8px;
+}
+.card:hover { background: var(--card-h); border-color: var(--border2); }
+.yr-2020 { border-left-color: #6366f1; }
+.yr-2021 { border-left-color: #06b6d4; }
+.yr-2022 { border-left-color: #8b5cf6; }
+.yr-2023 { border-left-color: #3b82f6; }
+.yr-2024 { border-left-color: #22c55e; }
+.yr-2025 { border-left-color: #f97316; }
+.yr-2026 { border-left-color: #f43f5e; }
+.card-top { display: flex; flex-direction: column; gap: 4px; }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.card-job { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); }
+.type-badge { padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
+.tp-foto { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.tp-raw { background: rgba(168,85,247,0.15); color: #c084fc; }
+.tp-audio { background: rgba(234,179,8,0.15); color: #fbbf24; }
+.tp-edicion { background: rgba(34,197,94,0.15); color: #4ade80; }
+.tp-entrega { background: rgba(249,115,22,0.15); color: #fb923c; }
+.card-name { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.card-date { font-size: 0.72rem; color: var(--text2); }
+.card-path {}
+.dbx-link {
+display: inline-flex; align-items: center; gap: 5px;
+color: var(--text3); font-size: 0.7rem; text-decoration: none;
+transition: color 0.15s; word-break: break-all;
+}
+.dbx-link:hover { color: #0061fe; }
+.dbx-link svg { flex-shrink: 0; fill: #0061fe; opacity: 0.7; }
+.dbx-link:hover svg { opacity: 1; }
+.card-bottom { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; }
+.card-stat { display: flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--text3); }
+.card-level { margin-left: auto; font-size: 0.65rem; color: var(--text3); background: var(--bg2); padding: 2px 7px; border-radius: 10px; }
 
-    /* ─── MAP TAB ─── */
-    #tab-mapa { display: none; }
-    #map { height: calc(100vh - 120px); width: 100%; }
-    .leaflet-popup-content-wrapper {
-      background: #161f30; border: 1px solid #2a3a52; border-radius: 10px; color: #e2e8f0;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    }
-    .leaflet-popup-tip { background: #161f30; }
-    .leaflet-popup-close-button { color: #94a3b8 !important; }
-    .map-popup-title { font-size: 0.95rem; font-weight: 700; color: #f97316; margin-bottom: 6px; }
-    .map-popup-count { font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; }
-    .map-popup-folders { font-size: 0.72rem; color: #94a3b8; }
-    .map-popup-folders div { padding: 2px 0; border-bottom: 1px solid #1e2d40; }
-    .map-popup-folders div:last-child { border-bottom: none; }
-    .map-legend {
-      position: absolute; bottom: 30px; right: 10px; z-index: 1000;
-      background: rgba(14,19,32,0.9); border: 1px solid #1e2d40; border-radius: 10px;
-      padding: 12px 16px; font-size: 0.72rem; color: #94a3b8;
-      backdrop-filter: blur(8px);
-    }
-    .map-legend-title { font-weight: 700; color: #e2e8f0; margin-bottom: 8px; font-size: 0.75rem; }
-    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-    .legend-dot { border-radius: 50%; flex-shrink: 0; }
+/* ─── MAP TAB ─── */
+#tab-mapa { display: none; }
+#map { height: calc(100vh - 120px); width: 100%; }
+.leaflet-popup-content-wrapper {
+background: #161f30; border: 1px solid #2a3a52; border-radius: 10px; color: #e2e8f0;
+box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.leaflet-popup-tip { background: #161f30; }
+.leaflet-popup-close-button { color: #94a3b8 !important; }
+.map-popup-title { font-size: 0.95rem; font-weight: 700; color: #f97316; margin-bottom: 6px; }
+.map-popup-count { font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px; }
+.map-popup-folders { font-size: 0.72rem; color: #94a3b8; }
+.map-popup-folders div { padding: 2px 0; border-bottom: 1px solid #1e2d40; }
+.map-popup-folders div:last-child { border-bottom: none; }
+.map-legend {
+position: absolute; bottom: 30px; right: 10px; z-index: 1000;
+background: rgba(14,19,32,0.9); border: 1px solid #1e2d40; border-radius: 10px;
+padding: 12px 16px; font-size: 0.72rem; color: #94a3b8;
+backdrop-filter: blur(8px);
+}
+.map-legend-title { font-weight: 700; color: #e2e8f0; margin-bottom: 8px; font-size: 0.75rem; }
+.legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.legend-dot { border-radius: 50%; flex-shrink: 0; }
 
-    /* ─── ANALYTICS TAB ─── */
-    #tab-analytics { display: none; padding: 24px 20px 40px; }
-    .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 28px; }
-    .stat-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 18px 20px; text-align: center;
-    }
-    .stat-card-val { font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
-    .stat-card-lbl { font-size: 0.72rem; color: var(--text2); margin-top: 6px; }
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
-    .chart-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 20px;
-    }
-    .chart-card.wide { grid-column: 1 / -1; }
-    .chart-title { font-size: 0.8rem; font-weight: 600; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
-    .chart-wrap { position: relative; }
-  
-    /* ── VIMEO TAB ── */
-    #tab-vimeo { padding:20px; }
-    .vimeo-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
-    #vimeo-search { flex:1; min-width:200px; padding:9px 14px; background:var(--bg2); border:1px solid var(--border); color:var(--text1); border-radius:8px; font-size:0.88rem; outline:none; }
-    #vimeo-search:focus { border-color:var(--accent); }
-    #vimeo-count { color:var(--text3); font-size:0.82rem; white-space:nowrap; }
-    #vimeo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
-    .vimeo-card { background:var(--bg2); border-radius:8px; overflow:hidden; border:1px solid var(--border); transition:transform 0.15s,border-color 0.15s; }
-    .vimeo-card:hover { transform:translateY(-2px); border-color:var(--accent); }
-    .vimeo-thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:#0a0a0a; cursor:pointer; }
-    .vimeo-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-    .vimeo-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; font-size:2.2rem; }
-    .vimeo-thumb:hover .vimeo-play-icon { opacity:1; }
-    .vimeo-thumb iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
-    .vimeo-info { padding:9px 11px 10px; }
-    .vimeo-title { font-size:0.8rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text1); }
-    .vimeo-desc { font-size:11px; color:#888; padding:2px 8px 6px; line-height:1.4; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+/* ─── ANALYTICS TAB ─── */
+#tab-analytics { display: none; padding: 24px 20px 40px; }
+.analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 28px; }
+.stat-card {
+background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+padding: 18px 20px; text-align: center;
+}
+.stat-card-val { font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+.stat-card-lbl { font-size: 0.72rem; color: var(--text2); margin-top: 6px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+.chart-card {
+background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+padding: 20px;
+}
+.chart-card.wide { grid-column: 1 / -1; }
+.chart-title { font-size: 0.8rem; font-weight: 600; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+.chart-wrap { position: relative; }
+
+/* ── VIMEO TAB ── */
+#tab-vimeo { padding:20px; }
+.vimeo-toolbar { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+#vimeo-search { flex:1; min-width:200px; padding:9px 14px; background:var(--bg2); border:1px solid var(--border); color:var(--text1); border-radius:8px; font-size:0.88rem; outline:none; }
+#vimeo-search:focus { border-color:var(--accent); }
+#vimeo-count { color:var(--text3); font-size:0.82rem; white-space:nowrap; }
+#vimeo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+.vimeo-card { background:var(--bg2); border-radius:8px; overflow:hidden; border:1px solid var(--border); transition:transform 0.15s,border-color 0.15s; }
+.vimeo-card:hover { transform:translateY(-2px); border-color:var(--accent); }
+.vimeo-thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:#0a0a0a; cursor:pointer; }
+.vimeo-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.vimeo-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; font-size:2.2rem; }
+.vimeo-thumb:hover .vimeo-play-icon { opacity:1; }
+.vimeo-thumb iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
+.vimeo-info { padding:9px 11px 10px; }
+.vimeo-title { font-size:0.8rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text1); }
+.vimeo-desc { font-size:11px; color:#888; padding:2px 8px 6px; line-height:1.4; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .vimeo-meta { font-size:0.72rem; color:var(--text3); }
-    #vimeo-more-btn { display:none; margin:22px auto 4px; padding:9px 30px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.88rem; font-family:inherit; }
-    #vimeo-more-btn:hover { opacity:0.85; }
-    .vimeo-spinner { text-align:center; padding:40px; color:var(--text3); font-size:0.9rem; }
+#vimeo-more-btn { display:none; margin:22px auto 4px; padding:9px 30px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.88rem; font-family:inherit; }
+#vimeo-more-btn:hover { opacity:0.85; }
+.vimeo-spinner { text-align:center; padding:40px; color:var(--text3); font-size:0.9rem; }
 </style>
 </head>
 <body>
 
 <!-- GATE -->
 <div id="gate">
-  <div class="gate-box">
-    <img src="oldelval_logo.png" alt="Oldelval" style="width:200px;margin-bottom:20px;mix-blend-mode:screen;" />
-    <p class="gate-sub">Ingresá la contraseña para acceder al material</p>
-    <input id="gateInput" class="gate-input" type="password" placeholder="Contraseña" />
-    <button class="gate-btn" onclick="tryLogin()">Ingresar</button>
-    <p class="gate-err" id="gateErr">Contraseña incorrecta</p>
-    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;">
-      <span style="font-size:0.65rem;color:var(--text3);">por</span>
-      <img src="logo.png" alt="Tronadores" style="height:60px;mix-blend-mode:screen;" />
-    </div>
-  </div>
+<div class="gate-box">
+<img src="oldelval_logo.png" alt="Oldelval" style="width:200px;margin-bottom:20px;mix-blend-mode:screen;" />
+<p class="gate-sub">Ingresá la contraseña para acceder al material</p>
+<input id="gateInput" class="gate-input" type="password" placeholder="Contraseña" />
+<button class="gate-btn" onclick="tryLogin()">Ingresar</button>
+<p class="gate-err" id="gateErr">Contraseña incorrecta</p>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;">
+<span style="font-size:0.65rem;color:var(--text3);">por</span>
+<img src="logo.png" alt="Tronadores" style="height:60px;mix-blend-mode:screen;" />
+</div>
+</div>
 </div>
 
 <!-- APP -->
 <div id="app" style="display:none">
-  <header>
-    <div class="header-top">
-      <img src="oldelval_logo.png" alt="Oldelval" style="height:34px;mix-blend-mode:screen;" />
-      <img src="logo.png" alt="Tronadores" style="height:30px;mix-blend-mode:screen;opacity:0.65;margin-left:-4px;" />
-      <div><span class="brand-name">OLDELVAL</span><span class="brand-sub">Archivo Audiovisual</span></div>
-      <div class="search-wrap">
-        <svg class="search-ico" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInput" type="text" placeholder="Buscar por trabajo, carpeta, fecha..." oninput="apply()" />
-      </div>
-      <div class="stats">Carpetas: <span id="stat-total">—</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">—</span></div>
-    </div>
-    <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">📁 Archivo</button>
-      <button class="tab-btn" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</button>
-      <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</button>
-    <button class="tab-btn" data-tab="vimeo" onclick="switchTab('vimeo')">🎬 Vimeo</button>
-    </nav>
-  </header>
-
-  <!-- TAB: ARCHIVO -->
-  <div id="tab-archivo">
-    <div class="filters">
-      <div class="filter-row">
-        <span class="filter-label">Año</span>
-        <div class="chips" id="chips-yr"></div>
-        <div class="filter-sep"></div>
-        <span class="filter-label">Tipo</span>
-        <div class="chips" id="chips-tp"></div>
-        <div class="filter-sep"></div>
-        <span class="filter-label">Trabajo</span>
-        <div class="chips" id="chips-jo"></div>
-        <div class="filter-sep"></div>
-        <span class="filter-label">Lugar</span>
-        <div class="chips" id="chips-lu"></div>
-      </div>
-    </div>
-    <div class="results-header">
-      <span id="results-count">Cargando...</span>
-      <select class="sort-select" id="sortSelect" onchange="apply()">
-        <option value="date-desc">Más reciente primero</option>
-        <option value="date-asc">Más antiguo primero</option>
-        <option value="name-az">Nombre A→Z</option>
-        <option value="job-az">Trabajo A→Z</option>
-      </select>
-    </div>
-    <main>
-      <div id="loading">Cargando datos…</div>
-      <div id="grid"></div>
-    </main>
-  </div>
-
-  <!-- TAB: MAPA -->
-  <div id="tab-mapa">
-    <div id="map"></div>
-  </div>
-
-  <!-- TAB: ANALYTICS -->
-  <div id="tab-analytics">
-    <div class="analytics-grid" id="stat-cards"></div>
-    <div class="charts-grid">
-      <div class="chart-card wide">
-        <div class="chart-title">Registros por Año</div>
-        <div class="chart-wrap"><canvas id="chartYear" height="80"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Por Tipo de Contenido</div>
-        <div class="chart-wrap"><canvas id="chartType" height="260"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Top Ubicaciones</div>
-        <div class="chart-wrap"><canvas id="chartLugar" height="260"></canvas></div>
-      </div>
-      <div class="chart-card wide">
-        <div class="chart-title">Actividad Mensual</div>
-        <div class="chart-wrap"><canvas id="chartMonth" height="80"></canvas></div>
-      </div>
-    </div>
+<header>
+<div class="header-top">
+<img src="oldelval_logo.png" alt="Oldelval" style="height:34px;mix-blend-mode:screen;" />
+<img src="logo.png" alt="Tronadores" style="height:30px;mix-blend-mode:screen;opacity:0.65;margin-left:-4px;" />
+<div><span class="brand-name">OLDELVAL</span><span class="brand-sub">Archivo Audiovisual</span></div>
+<div class="search-wrap">
+<svg class="search-ico" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<input id="searchInput" type="text" placeholder="Buscar por trabajo, carpeta, fecha..." oninput="apply()" />
 </div>
-  <div id="tab-vimeo" style="display:none">
-      <div class="vimeo-toolbar">
-        <input id="vimeo-search" type="text" placeholder="Buscar videos OLD..." autocomplete="off" />
-        <span id="vimeo-count"></span>
-      </div>
-      <div id="vimeo-grid"></div>
-      <button id="vimeo-more-btn" onclick="loadVimeoPage()">Cargar más</button>
-    </div>
+<div class="stats">Carpetas: <span id="stat-total">—</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">—</span></div>
+</div>
+<nav class="tab-nav">
+<button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">📁 Archivo</button>
+<button class="tab-btn" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</button>
+<button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</button>
+<button class="tab-btn" data-tab="vimeo" onclick="switchTab('vimeo')">🎬 Vimeo</button>
+</nav>
+</header>
+
+<!-- TAB: ARCHIVO -->
+<div id="tab-archivo">
+<div class="filters">
+<div class="filter-row">
+<span class="filter-label">Año</span>
+<div class="chips" id="chips-yr"></div>
+<div class="filter-sep"></div>
+<span class="filter-label">Tipo</span>
+<div class="chips" id="chips-tp"></div>
+<div class="filter-sep"></div>
+<span class="filter-label">Trabajo</span>
+<div class="chips" id="chips-jo"></div>
+<div class="filter-sep"></div>
+<span class="filter-label">Lugar</span>
+<div class="chips" id="chips-lu"></div>
+</div>
+</div>
+<div class="results-header">
+<span id="results-count">Cargando...</span>
+<select class="sort-select" id="sortSelect" onchange="apply()">
+<option value="date-desc">Más reciente primero</option>
+<option value="date-asc">Más antiguo primero</option>
+<option value="name-az">Nombre A→Z</option>
+<option value="job-az">Trabajo A→Z</option>
+</select>
+</div>
+<main>
+<div id="loading">Cargando datos…</div>
+<div id="grid"></div>
+</main>
+</div>
+
+<!-- TAB: MAPA -->
+<div id="tab-mapa">
+<div id="map"></div>
+</div>
+
+<!-- TAB: ANALYTICS -->
+<div id="tab-analytics">
+<div class="analytics-grid" id="stat-cards"></div>
+<div class="charts-grid">
+<div class="chart-card wide">
+<div class="chart-title">Registros por Año</div>
+<div class="chart-wrap"><canvas id="chartYear" height="80"></canvas></div>
+</div>
+<div class="chart-card">
+<div class="chart-title">Por Tipo de Contenido</div>
+<div class="chart-wrap"><canvas id="chartType" height="260"></canvas></div>
+</div>
+<div class="chart-card">
+<div class="chart-title">Top Ubicaciones</div>
+<div class="chart-wrap"><canvas id="chartLugar" height="260"></canvas></div>
+</div>
+<div class="chart-card wide">
+<div class="chart-title">Actividad Mensual</div>
+<div class="chart-wrap"><canvas id="chartMonth" height="80"></canvas></div>
+</div>
+</div>
+</div>
+<div id="tab-vimeo" style="display:none">
+<div class="vimeo-toolbar">
+<input id="vimeo-search" type="text" placeholder="Buscar videos OLD..." autocomplete="off" />
+<span id="vimeo-count"></span>
+</div>
+<div id="vimeo-grid"></div>
+<button id="vimeo-more-btn" onclick="loadVimeoPage()">Cargar más</button>
+</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -346,37 +346,37 @@ const PASSWORD = 'JuliCapitana';
 const DATA_URL = 'data.json';
 
 const LUGAR_GROUPS = [
-  {label:'Allen',pat:'allen'},{label:'Chimpay',pat:'chimpay'},
-  {label:'Río Colorado',pat:'rio.colorado|rio colorado'},
-  {label:'Pichi Mahuida',pat:'pichi.mahuida'},{label:'Algarrobo',pat:'algarrobo'},
-  {label:'Chichinales',pat:'chichinales'},{label:'Bahía Blanca',pat:'bahia.blanca'},
-  {label:'Sede Central',pat:'sede.central|sedecentral|cipoletti|cipol'},{label:'Medanito',pat:'medanito'},{label:'Centenario',pat:'centenario'},
-  {label:'Neuquén',pat:'neuquen'},{label:'La Adela',pat:'la.adela'},
-  {label:'Catriel',pat:'catriel'},{label:'Zorrilla',pat:'zorrilla'},
-  {label:'Challacó',pat:'challaco'},{label:'Auca Mahuida',pat:'auca.mahuida'},
-  {label:'Butaco',pat:'butaco'},{label:'Medanos',pat:'medanos'},
+{label:'Allen',pat:'allen'},{label:'Chimpay',pat:'chimpay'},
+{label:'Río Colorado',pat:'rio.colorado|rio colorado'},
+{label:'Pichi Mahuida',pat:'pichi.mahuida'},{label:'Algarrobo',pat:'algarrobo'},
+{label:'Chichinales',pat:'chichinales'},{label:'Bahía Blanca',pat:'bahia.blanca'},
+{label:'Sede Central',pat:'sede.central|sedecentral|cipoletti|cipol'},{label:'Medanito',pat:'medanito'},{label:'Centenario',pat:'centenario'},
+{label:'Neuquén',pat:'neuquen'},{label:'La Adela',pat:'la.adela'},
+{label:'Catriel',pat:'catriel'},{label:'Zorrilla',pat:'zorrilla'},
+{label:'Challacó',pat:'challaco'},{label:'Auca Mahuida',pat:'auca.mahuida'},
+{label:'Butaco',pat:'butaco'},{label:'Medanos',pat:'medanos'},
 ];
 
 // Coordenadas [lat, lng] de cada lugar
 const LUGAR_COORDS = {
-  'Allen':         [-38.974, -67.833],
-  'Chimpay':       [-39.167, -66.150],
-  'Río Colorado':  [-38.997, -64.096],
-  'Pichi Mahuida': [-39.433, -65.500],
-  'Algarrobo':     [-38.980, -67.950],
-  'Chichinales':   [-38.967, -68.067],
-  'Bahía Blanca':  [-38.718, -62.266],
-  'Sede Central':  [-38.942, -68.000],
-  'Medanito':      [-38.390, -68.370],
-  'Centenario':    [-38.817, -68.100],
-  'Neuquén':       [-38.952, -68.059],
-  'La Adela':      [-38.983, -64.083],
-  'Catriel':       [-37.850, -67.517],
-  'Zorrilla':      [-39.010, -67.780],
-  'Challacó':      [-38.550, -68.350],
-  'Auca Mahuida':  [-37.733, -68.917],
-  'Butaco':        [-37.600, -70.700],
-  'Medanos':       [-38.833, -67.950],
+'Allen': [-38.974, -67.833],
+'Chimpay': [-39.167, -66.150],
+'Río Colorado': [-38.997, -64.096],
+'Pichi Mahuida': [-39.433, -65.500],
+'Algarrobo': [-38.980, -67.950],
+'Chichinales': [-38.967, -68.067],
+'Bahía Blanca': [-38.718, -62.266],
+'Sede Central': [-38.942, -68.000],
+'Medanito': [-38.390, -68.370],
+'Centenario': [-38.817, -68.100],
+'Neuquén': [-38.952, -68.059],
+'La Adela': [-38.983, -64.083],
+'Catriel': [-37.850, -67.517],
+'Zorrilla': [-39.010, -67.780],
+'Challacó': [-38.550, -68.350],
+'Auca Mahuida': [-37.733, -68.917],
+'Butaco': [-37.600, -70.700],
+'Medanos': [-38.833, -67.950],
 };
 
 let activeYr = 'all', activeTp = 'all', activeJo = 'all', activeLu = 'all';
@@ -386,386 +386,394 @@ let mapInstance = null;
 let chartsBuilt = false;
 let activeTab = 'archivo';
 
-const gateEl    = document.getElementById('gate');
-const appEl     = document.getElementById('app');
+const gateEl = document.getElementById('gate');
+const appEl = document.getElementById('app');
 const gateInput = document.getElementById('gateInput');
-const gateErr   = document.getElementById('gateErr');
+const gateErr = document.getElementById('gateErr');
 
 gateInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
 
 function tryLogin() {
-  if (gateInput.value === PASSWORD) {
-    sessionStorage.setItem('oldelval_auth', '1');
-    gateEl.style.display = 'none';
-    appEl.style.display  = 'block';
-    initApp();
-  } else {
-    gateErr.style.display = 'block';
-    gateInput.value = '';
-    gateInput.focus();
-  }
+if (gateInput.value === PASSWORD) {
+sessionStorage.setItem('oldelval_auth', '1');
+gateEl.style.display = 'none';
+appEl.style.display = 'block';
+initApp();
+} else {
+gateErr.style.display = 'block';
+gateInput.value = '';
+gateInput.focus();
+}
 }
 
 if (sessionStorage.getItem('oldelval_auth') === '1') {
-  gateEl.style.display = 'none';
-  appEl.style.display  = 'block';
-  initApp();
+gateEl.style.display = 'none';
+appEl.style.display = 'block';
+initApp();
 }
 
 // ─── TAB SWITCHING ───
 function switchTab(tab) {
-  activeTab = tab;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-  document.getElementById('tab-archivo').style.display    = tab === 'archivo'   ? 'block' : 'none';
-  document.getElementById('tab-mapa').style.display       = tab === 'mapa'      ? 'block' : 'none';
-  document.getElementById('tab-analytics').style.display  = tab === 'analytics' ? 'block' : 'none';
-  document.getElementById('tab-vimeo').style.display = tab === 'vimeo' ? 'block' : 'none';
-  if (tab === 'vimeo') initVimeoTab();
+activeTab = tab;
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+document.getElementById('tab-archivo').style.display = tab === 'archivo' ? 'block' : 'none';
+document.getElementById('tab-mapa').style.display = tab === 'mapa' ? 'block' : 'none';
+document.getElementById('tab-analytics').style.display = tab === 'analytics' ? 'block' : 'none';
+document.getElementById('tab-vimeo').style.display = tab === 'vimeo' ? 'block' : 'none';
+if (tab === 'vimeo') initVimeoTab();
 
-  if (tab === 'mapa' && RAW.length) initMap();
-  if (tab === 'analytics' && RAW.length && !chartsBuilt) buildCharts();
+if (tab === 'mapa' && RAW.length) initMap();
+if (tab === 'analytics' && RAW.length && !chartsBuilt) buildCharts();
 }
 
 // ─── DATA LOAD ───
 async function initApp() {
-  try {
-    const res = await fetch(DATA_URL);
-    RAW = await res.json();
-    buildFilters();
-    apply();
-  } catch(e) {
-    document.getElementById('loading').innerHTML = '<p style="color:#ef4444">Error al cargar datos</p>';
-  }
+try {
+const res = await fetch(DATA_URL, { cache: 'no-store' });
+RAW = await res.json();
+buildFilters();
+apply();
+} catch(e) {
+document.getElementById('loading').innerHTML = '<p style="color:#ef4444">Error al cargar datos</p>';
+}
 }
 
 function buildFilters() {
-  const jobs = new Set(RAW.map(r => r.jo).filter(Boolean));
-  document.getElementById('stat-total').textContent = RAW.length.toLocaleString('es');
-  document.getElementById('stat-jobs').textContent  = jobs.size;
+const jobs = new Set(RAW.map(r => r.jo).filter(Boolean));
+document.getElementById('stat-total').textContent = RAW.length.toLocaleString('es');
+document.getElementById('stat-jobs').textContent = jobs.size;
 
-  const years = [...new Set(RAW.map(r => r.yr).filter(Boolean))].sort((a,b) => b-a);
-  buildChips('chips-yr', ['all', ...years], v => { activeYr = v; apply(); });
+const years = [...new Set(RAW.map(r => r.yr).filter(Boolean))].sort((a,b) => b-a);
+buildChips('chips-yr', ['all', ...years], v => { activeYr = v; apply(); });
 
-  const types = [...new Set(RAW.map(r => r.tp).filter(Boolean))].sort();
-  buildChips('chips-tp', ['all', ...types], v => { activeTp = v; apply(); },
-    { 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦' });
+const types = [...new Set(RAW.map(r => r.tp).filter(Boolean))].sort();
+buildChips('chips-tp', ['all', ...types], v => { activeTp = v; apply(); },
+{ 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦' });
 
-  const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
-  buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
+const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
+buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
 
-  buildChips('chips-lu', ['all', ...LUGAR_GROUPS.map(g => g.label)], v => { activeLu = v; apply(); });
+buildChips('chips-lu', ['all', ...LUGAR_GROUPS.map(g => g.label)], v => { activeLu = v; apply(); });
 }
 
 function buildChips(containerId, values, onChange, icons={}) {
-  const wrap = document.getElementById(containerId);
-  values.forEach(v => {
-    const chip = document.createElement('button');
-    chip.className = 'chip' + (v === 'all' ? ' active' : '');
-    chip.textContent = (v === 'all') ? 'Todos' : (icons[v] ? icons[v]+' '+v : v);
-    chip.addEventListener('click', () => {
-      wrap.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      onChange(v);
-    });
-    wrap.appendChild(chip);
-  });
+const wrap = document.getElementById(containerId);
+values.forEach(v => {
+const chip = document.createElement('button');
+chip.className = 'chip' + (v === 'all' ? ' active' : '');
+chip.textContent = (v === 'all') ? 'Todos' : (icons[v] ? icons[v]+' '+v : v);
+chip.addEventListener('click', () => {
+wrap.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+chip.classList.add('active');
+onChange(v);
+});
+wrap.appendChild(chip);
+});
 }
 
 function tpClass(tp) {
-  const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega' };
-  return m[tp] || '';
+const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega' };
+return m[tp] || '';
+}
+
+// Build the URL we link to for a given record. Prefer the share link
+// generated by the sync script (r.sl). Fall back to /home/<path> which works
+// for users logged into Dropbox with access to the folder.
+function dropboxHref(r) {
+if (r.sl) return r.sl;
+if (r.pt) return 'https://www.dropbox.com/home' + r.pt;
+return '';
 }
 
 // ─── APPLY FILTERS ───
 function apply() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  sortVal = document.getElementById('sortSelect').value;
+const q = document.getElementById('searchInput').value.trim().toLowerCase();
+sortVal = document.getElementById('sortSelect').value;
 
-  const filtered = RAW.filter(r => {
-    if (activeYr !== 'all' && r.yr !== activeYr) return false;
-    if (activeTp !== 'all' && r.tp !== activeTp) return false;
-    if (activeJo !== 'all' && r.jo !== activeJo) return false;
-    if (activeLu !== 'all') { const g = LUGAR_GROUPS.find(x => x.label === activeLu); if (g && !new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))) return false; }
-    if (q) {
-      const hay = [r.nm, r.jo, r.pt, r.dt, r.tp].join(' ').toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
+const filtered = RAW.filter(r => {
+if (activeYr !== 'all' && r.yr !== activeYr) return false;
+if (activeTp !== 'all' && r.tp !== activeTp) return false;
+if (activeJo !== 'all' && r.jo !== activeJo) return false;
+if (activeLu !== 'all') { const g = LUGAR_GROUPS.find(x => x.label === activeLu); if (g && !new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))) return false; }
+if (q) {
+const hay = [r.nm, r.jo, r.pt, r.dt, r.tp].join(' ').toLowerCase();
+if (!hay.includes(q)) return false;
+}
+return true;
+});
 
-  filtered.sort((a,b) => {
-    if (sortVal === 'date-desc') return (b.dt||'').localeCompare(a.dt||'');
-    if (sortVal === 'date-asc')  return (a.dt||'').localeCompare(b.dt||'');
-    if (sortVal === 'name-az')   return (a.nm||'').localeCompare(b.nm||'');
-    if (sortVal === 'job-az')    return (a.jo||'').localeCompare(b.jo||'');
-    return 0;
-  });
+filtered.sort((a,b) => {
+if (sortVal === 'date-desc') return (b.dt||'').localeCompare(a.dt||'');
+if (sortVal === 'date-asc') return (a.dt||'').localeCompare(b.dt||'');
+if (sortVal === 'name-az') return (a.nm||'').localeCompare(b.nm||'');
+if (sortVal === 'job-az') return (a.jo||'').localeCompare(b.jo||'');
+return 0;
+});
 
-  document.getElementById('results-count').textContent = filtered.length.toLocaleString('es') + ' resultados';
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('grid').innerHTML = filtered.map(r => {
-    const name    = r.nm || 'Sin nombre';
-    const job     = r.jo || '';
-    const date    = r.dt ? new Date(r.dt+'T00:00:00').toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}) : '';
-    const yr      = r.yr || '';
-    const tp      = r.tp || '';
-    const path    = r.pt || '';
-    const folders = r.fd ?? 0;
-    const files   = r.fi ?? 0;
-    const lvl     = r.lv ?? 0;
-    const yrClass = yr ? `yr-${yr}` : '';
-    const tpCls   = tpClass(tp);
-    return `<div class="card ${yrClass}" title="${path}">
-      <div class="card-top">
-        <div class="card-header">
-          <span class="card-job">${job}</span>
-          ${tp ? `<span class="type-badge ${tpCls}">${tp}</span>` : ''}
-        </div>
-        <div class="card-name">${name}</div>
-        ${date ? `<div class="card-date">📅 ${date}</div>` : ''}
-      </div>
-      <div class="card-path">${path ? `<a class="dbx-link" href="https://www.dropbox.com/work${path}" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${path}</a>` : ''}</div>
-      <div class="card-bottom">
-        <span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>${folders} carpeta${folders!==1?'s':''}</span>
-        ${files > 0 ? `<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>${files} archivo${files!==1?'s':''}</span>` : ''}
-        <span class="card-level">nv.${lvl}</span>
-      </div>
-    </div>`;
-  }).join('');
+document.getElementById('results-count').textContent = filtered.length.toLocaleString('es') + ' resultados';
+document.getElementById('loading').style.display = 'none';
+document.getElementById('grid').innerHTML = filtered.map(r => {
+const name = r.nm || 'Sin nombre';
+const job = r.jo || '';
+const date = r.dt ? new Date(r.dt+'T00:00:00').toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}) : '';
+const yr = r.yr || '';
+const tp = r.tp || '';
+const path = r.pt || '';
+const folders = r.fd ?? 0;
+const files = r.fi ?? 0;
+const lvl = r.lv ?? 0;
+const yrClass = yr ? `yr-${yr}` : '';
+const tpCls = tpClass(tp);
+const href = dropboxHref(r);
+return `<div class="card ${yrClass}" title="${path}">
+<div class="card-top">
+<div class="card-header">
+<span class="card-job">${job}</span>
+${tp ? `<span class="type-badge ${tpCls}">${tp}</span>` : ''}
+</div>
+<div class="card-name">${name}</div>
+${date ? `<div class="card-date">📅 ${date}</div>` : ''}
+</div>
+<div class="card-path">${href ? `<a class="dbx-link" href="${href}" target="_blank" rel="noopener noreferrer"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${path}</a>` : ''}</div>
+<div class="card-bottom">
+<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>${folders} carpeta${folders!==1?'s':''}</span>
+${files > 0 ? `<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>${files} archivo${files!==1?'s':''}</span>` : ''}
+<span class="card-level">nv.${lvl}</span>
+</div>
+</div>`;
+}).join('');
 }
 
 // ─── MAP ───
 function initMap() {
-  if (mapInstance) { mapInstance.invalidateSize(); return; }
-  mapInstance = L.map('map', { center: [-38.8, -67.5], zoom: 7, preferCanvas: true });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &amp; CartoDB',
-    subdomains: 'abcd', maxZoom: 19
-  }).addTo(mapInstance);
+if (mapInstance) { mapInstance.invalidateSize(); return; }
+mapInstance = L.map('map', { center: [-38.8, -67.5], zoom: 7, preferCanvas: true });
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+attribution: '&copy; OpenStreetMap &amp; CartoDB',
+subdomains: 'abcd', maxZoom: 19
+}).addTo(mapInstance);
 
-  // Compute counts per location
-  LUGAR_GROUPS.forEach(g => {
-    const coords = LUGAR_COORDS[g.label];
-    if (!coords) return;
-    const records = RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'') + ' ' + (r.jo||'')));
-    if (!records.length) return;
-    const count = records.length;
-    const r = Math.max(8, Math.min(40, 8 + Math.sqrt(count) * 3));
-    const recent = records.slice(0,5).map(x => `<div>${x.nm || x.jo}</div>`).join('');
+// Compute counts per location
+LUGAR_GROUPS.forEach(g => {
+const coords = LUGAR_COORDS[g.label];
+if (!coords) return;
+const records = RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'') + ' ' + (r.jo||'')));
+if (!records.length) return;
+const count = records.length;
+const r = Math.max(8, Math.min(40, 8 + Math.sqrt(count) * 3));
+const recent = records.slice(0,5).map(x => `<div>${x.nm || x.jo}</div>`).join('');
 
-    L.circleMarker(coords, {
-      radius: r, color: '#f97316', fillColor: '#f97316',
-      fillOpacity: 0.25, weight: 2, opacity: 0.8
-    }).addTo(mapInstance).bindPopup(`
-      <div class="map-popup-title">${g.label}</div>
-      <div class="map-popup-count">${count} registro${count!==1?'s':''} en el archivo</div>
-      <div class="map-popup-folders">${recent}</div>
-    `, { maxWidth: 260 });
-  });
+L.circleMarker(coords, {
+radius: r, color: '#f97316', fillColor: '#f97316',
+fillOpacity: 0.25, weight: 2, opacity: 0.8
+}).addTo(mapInstance).bindPopup(`
+<div class="map-popup-title">${g.label}</div>
+<div class="map-popup-count">${count} registro${count!==1?'s':''} en el archivo</div>
+<div class="map-popup-folders">${recent}</div>
+`, { maxWidth: 260 });
+});
 
-  // Legend
-  const legend = L.control({ position: 'bottomright' });
-  legend.onAdd = () => {
-    const div = L.DomUtil.create('div', 'map-legend');
-    div.innerHTML = `<div class="map-legend-title">Referencias</div>
-      <div class="legend-item"><div class="legend-dot" style="width:10px;height:10px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>1–10 registros</div>
-      <div class="legend-item"><div class="legend-dot" style="width:18px;height:18px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>10–30 registros</div>
-      <div class="legend-item"><div class="legend-dot" style="width:28px;height:28px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>30+ registros</div>`;
-    return div;
-  };
-  legend.addTo(mapInstance);
+// Legend
+const legend = L.control({ position: 'bottomright' });
+legend.onAdd = () => {
+const div = L.DomUtil.create('div', 'map-legend');
+div.innerHTML = `<div class="map-legend-title">Referencias</div>
+<div class="legend-item"><div class="legend-dot" style="width:10px;height:10px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>1–10 registros</div>
+<div class="legend-item"><div class="legend-dot" style="width:18px;height:18px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>10–30 registros</div>
+<div class="legend-item"><div class="legend-dot" style="width:28px;height:28px;background:#f97316;opacity:0.8;border:2px solid #f97316;border-radius:50%;"></div>30+ registros</div>`;
+return div;
+};
+legend.addTo(mapInstance);
 }
 
 // ─── ANALYTICS ───
 function buildCharts() {
-  chartsBuilt = true;
-  const FONT = 'Inter, sans-serif';
-  Chart.defaults.font.family = FONT;
-  Chart.defaults.color = '#94a3b8';
+chartsBuilt = true;
+const FONT = 'Inter, sans-serif';
+Chart.defaults.font.family = FONT;
+Chart.defaults.color = '#94a3b8';
 
-  // Summary cards
-  const totalFolders = RAW.length;
-  const totalFiles = RAW.reduce((s,r) => s + (r.fi||0), 0);
-  const totalFolderSubdirs = RAW.reduce((s,r) => s + (r.fd||0), 0);
-  const years = new Set(RAW.map(r=>r.yr).filter(Boolean));
-  const lugaresCovered = LUGAR_GROUPS.filter(g => RAW.some(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||'')))).length;
-  const cards = [
-    {val: totalFolders.toLocaleString('es'), lbl: 'Carpetas registradas'},
-    {val: totalFiles.toLocaleString('es'), lbl: 'Archivos indexados'},
-    {val: totalFolderSubdirs.toLocaleString('es'), lbl: 'Subcarpetas'},
-    {val: years.size, lbl: 'Años de archivo'},
-    {val: lugaresCovered, lbl: 'Ubicaciones'},
-    {val: new Set(RAW.map(r=>r.jo).filter(Boolean)).size, lbl: 'Proyectos'},
-  ];
-  document.getElementById('stat-cards').innerHTML = cards.map(c =>
-    `<div class="stat-card"><div class="stat-card-val">${c.val}</div><div class="stat-card-lbl">${c.lbl}</div></div>`
-  ).join('');
+// Summary cards
+const totalFolders = RAW.length;
+const totalFiles = RAW.reduce((s,r) => s + (r.fi||0), 0);
+const totalFolderSubdirs = RAW.reduce((s,r) => s + (r.fd||0), 0);
+const years = new Set(RAW.map(r=>r.yr).filter(Boolean));
+const lugaresCovered = LUGAR_GROUPS.filter(g => RAW.some(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||'')))).length;
+const cards = [
+{val: totalFolders.toLocaleString('es'), lbl: 'Carpetas registradas'},
+{val: totalFiles.toLocaleString('es'), lbl: 'Archivos indexados'},
+{val: totalFolderSubdirs.toLocaleString('es'), lbl: 'Subcarpetas'},
+{val: years.size, lbl: 'Años de archivo'},
+{val: lugaresCovered, lbl: 'Ubicaciones'},
+{val: new Set(RAW.map(r=>r.jo).filter(Boolean)).size, lbl: 'Proyectos'},
+];
+document.getElementById('stat-cards').innerHTML = cards.map(c =>
+`<div class="stat-card"><div class="stat-card-val">${c.val}</div><div class="stat-card-lbl">${c.lbl}</div></div>`
+).join('');
 
-  const C = {
-    orange: '#f97316', blue: '#3b82f6', purple: '#a855f7',
-    green: '#22c55e', yellow: '#eab308', cyan: '#06b6d4',
-    red: '#ef4444', pink: '#f43f5e', indigo: '#6366f1',
-  };
-  const gridColor = 'rgba(30,45,64,0.8)';
+const C = {
+orange: '#f97316', blue: '#3b82f6', purple: '#a855f7',
+green: '#22c55e', yellow: '#eab308', cyan: '#06b6d4',
+red: '#ef4444', pink: '#f43f5e', indigo: '#6366f1',
+};
+const gridColor = 'rgba(30,45,64,0.8)';
 
-  // Chart 1: Por año
-  const yrCounts = {};
-  RAW.forEach(r => { if(r.yr) yrCounts[r.yr] = (yrCounts[r.yr]||0)+1; });
-  const yrLabels = Object.keys(yrCounts).sort();
-  const yrColors = [C.indigo,C.cyan,C.purple,C.blue,C.green,C.orange,C.red];
-  new Chart(document.getElementById('chartYear'), {
-    type: 'bar',
-    data: {
-      labels: yrLabels,
-      datasets: [{
-        label: 'Registros',
-        data: yrLabels.map(y => yrCounts[y]),
-        backgroundColor: yrLabels.map((_,i) => yrColors[i % yrColors.length] + '99'),
-        borderColor: yrLabels.map((_,i) => yrColors[i % yrColors.length]),
-        borderWidth: 2, borderRadius: 6,
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { font: { family: FONT } } },
-        y: { grid: { color: gridColor }, ticks: { font: { family: FONT } } }
-      }
-    }
-  });
+// Chart 1: Por año
+const yrCounts = {};
+RAW.forEach(r => { if(r.yr) yrCounts[r.yr] = (yrCounts[r.yr]||0)+1; });
+const yrLabels = Object.keys(yrCounts).sort();
+const yrColors = [C.indigo,C.cyan,C.purple,C.blue,C.green,C.orange,C.red];
+new Chart(document.getElementById('chartYear'), {
+type: 'bar',
+data: {
+labels: yrLabels,
+datasets: [{
+label: 'Registros',
+data: yrLabels.map(y => yrCounts[y]),
+backgroundColor: yrLabels.map((_,i) => yrColors[i % yrColors.length] + '99'),
+borderColor: yrLabels.map((_,i) => yrColors[i % yrColors.length]),
+borderWidth: 2, borderRadius: 6,
+}]
+},
+options: {
+plugins: { legend: { display: false } },
+scales: {
+x: { grid: { color: gridColor }, ticks: { font: { family: FONT } } },
+y: { grid: { color: gridColor }, ticks: { font: { family: FONT } } }
+}
+}
+});
 
-  // Chart 2: Por tipo (donut)
-  const tpCounts = {};
-  RAW.forEach(r => { if(r.tp) tpCounts[r.tp] = (tpCounts[r.tp]||0)+1; else tpCounts['Sin tipo'] = (tpCounts['Sin tipo']||0)+1; });
-  const tpLabels = Object.keys(tpCounts).sort((a,b) => tpCounts[b]-tpCounts[a]);
-  const tpColors = [C.blue, C.purple, C.yellow, C.green, C.orange, C.cyan];
-  new Chart(document.getElementById('chartType'), {
-    type: 'doughnut',
-    data: {
-      labels: tpLabels,
-      datasets: [{ data: tpLabels.map(t => tpCounts[t]), backgroundColor: tpColors, borderWidth: 0, hoverOffset: 8 }]
-    },
-    options: {
-      plugins: {
-        legend: { position: 'bottom', labels: { padding: 16, font: { family: FONT, size: 11 } } }
-      },
-      cutout: '62%'
-    }
-  });
+// Chart 2: Por tipo (donut)
+const tpCounts = {};
+RAW.forEach(r => { if(r.tp) tpCounts[r.tp] = (tpCounts[r.tp]||0)+1; else tpCounts['Sin tipo'] = (tpCounts['Sin tipo']||0)+1; });
+const tpLabels = Object.keys(tpCounts).sort((a,b) => tpCounts[b]-tpCounts[a]);
+const tpColors = [C.blue, C.purple, C.yellow, C.green, C.orange, C.cyan];
+new Chart(document.getElementById('chartType'), {
+type: 'doughnut',
+data: {
+labels: tpLabels,
+datasets: [{ data: tpLabels.map(t => tpCounts[t]), backgroundColor: tpColors, borderWidth: 0, hoverOffset: 8 }]
+},
+options: {
+plugins: {
+legend: { position: 'bottom', labels: { padding: 16, font: { family: FONT, size: 11 } } }
+},
+cutout: '62%'
+}
+});
 
-  // Chart 3: Por lugar (horizontal bar)
-  const lugarData = LUGAR_GROUPS.map(g => ({
-    label: g.label,
-    count: RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))).length
-  })).filter(x => x.count > 0).sort((a,b) => b.count - a.count).slice(0,12);
-  new Chart(document.getElementById('chartLugar'), {
-    type: 'bar',
-    data: {
-      labels: lugarData.map(x => x.label),
-      datasets: [{
-        label: 'Registros',
-        data: lugarData.map(x => x.count),
-        backgroundColor: C.orange + '88',
-        borderColor: C.orange,
-        borderWidth: 2, borderRadius: 4,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { color: gridColor } },
-        y: { grid: { display: false }, ticks: { font: { family: FONT, size: 11 } } }
-      }
-    }
-  });
+// Chart 3: Por lugar (horizontal bar)
+const lugarData = LUGAR_GROUPS.map(g => ({
+label: g.label,
+count: RAW.filter(r => new RegExp(g.pat,'i').test((r.nm||'')+' '+(r.jo||''))).length
+})).filter(x => x.count > 0).sort((a,b) => b.count - a.count).slice(0,12);
+new Chart(document.getElementById('chartLugar'), {
+type: 'bar',
+data: {
+labels: lugarData.map(x => x.label),
+datasets: [{
+label: 'Registros',
+data: lugarData.map(x => x.count),
+backgroundColor: C.orange + '88',
+borderColor: C.orange,
+borderWidth: 2, borderRadius: 4,
+}]
+},
+options: {
+indexAxis: 'y',
+plugins: { legend: { display: false } },
+scales: {
+x: { grid: { color: gridColor } },
+y: { grid: { display: false }, ticks: { font: { family: FONT, size: 11 } } }
+}
+}
+});
 
-  // Chart 4: Actividad mensual (line)
-  const monthCounts = {};
-  RAW.forEach(r => {
-    if (!r.dt) return;
-    const m = r.dt.substring(0, 7); // YYYY-MM
-    monthCounts[m] = (monthCounts[m]||0)+1;
-  });
-  const monthLabels = Object.keys(monthCounts).sort();
-  new Chart(document.getElementById('chartMonth'), {
-    type: 'line',
-    data: {
-      labels: monthLabels,
-      datasets: [{
-        label: 'Registros',
-        data: monthLabels.map(m => monthCounts[m]),
-        borderColor: C.blue, backgroundColor: C.blue + '22',
-        borderWidth: 2, fill: true, tension: 0.3,
-        pointRadius: 2, pointHoverRadius: 5,
-        pointBackgroundColor: C.blue,
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { font: { family: FONT, size: 10 }, maxRotation: 45 } },
-        y: { grid: { color: gridColor } }
-      }
-    }
-  });
+// Chart 4: Actividad mensual (line)
+const monthCounts = {};
+RAW.forEach(r => {
+if (!r.dt) return;
+const m = r.dt.substring(0, 7); // YYYY-MM
+monthCounts[m] = (monthCounts[m]||0)+1;
+});
+const monthLabels = Object.keys(monthCounts).sort();
+new Chart(document.getElementById('chartMonth'), {
+type: 'line',
+data: {
+labels: monthLabels,
+datasets: [{
+label: 'Registros',
+data: monthLabels.map(m => monthCounts[m]),
+borderColor: C.blue, backgroundColor: C.blue + '22',
+borderWidth: 2, fill: true, tension: 0.3,
+pointRadius: 2, pointHoverRadius: 5,
+pointBackgroundColor: C.blue,
+}]
+},
+options: {
+plugins: { legend: { display: false } },
+scales: {
+x: { grid: { color: gridColor }, ticks: { font: { family: FONT, size: 10 }, maxRotation: 45 } },
+y: { grid: { color: gridColor } }
+}
+}
+});
 }
 
+// ── VIMEO TAB ────────────────────────────────────────────
+let _vPage = 1, _vQuery = '', _vBusy = false, _vInited = false;
 
-  // ── VIMEO TAB ────────────────────────────────────────────
-  const VTOK = '1eaaa475eba27589da09a0cf3f8e875f';
-  let _vPage = 1, _vQuery = '', _vBusy = false, _vInited = false;
+function initVimeoTab() {
+if (_vInited) return; _vInited = true;
+loadVimeoPage(true);
+let timer;
+document.getElementById('vimeo-search').addEventListener('input', e => {
+clearTimeout(timer);
+timer = setTimeout(() => { _vQuery = e.target.value; _vPage = 1; loadVimeoPage(true); }, 400);
+});
+}
 
-  function initVimeoTab() {
-    if (_vInited) return; _vInited = true;
-    loadVimeoPage(true);
-    let timer;
-    document.getElementById('vimeo-search').addEventListener('input', e => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { _vQuery = e.target.value; _vPage = 1; loadVimeoPage(true); }, 400);
-    });
-  }
+async function loadVimeoPage(reset) {
+if (_vBusy) return; _vBusy = true;
+const grid = document.getElementById('vimeo-grid');
+const btn = document.getElementById('vimeo-more-btn');
+if (reset) { _vPage = 1; grid.innerHTML = '<div class="vimeo-spinner">Cargando...</div>'; btn.style.display='none'; }
+const baseQ = 'OLD' + (_vQuery ? ' ' + _vQuery : '');
+const url = '/api/vimeo?per_page=50&page=' + _vPage + '&query=' + encodeURIComponent(baseQ);
+let d;
+try { d = await fetch(url).then(r => r.json()); }
+catch (e) { d = { data: [], total: 0 }; }
+const filtered = (d.data||[]).filter(v => v.name && v.name.toUpperCase().startsWith('OLD'));
+document.getElementById('vimeo-count').textContent = (d.total||0).toLocaleString() + ' videos';
+if (reset) grid.innerHTML = '';
+filtered.forEach(v => {
+const id = v.uri.split('/').pop();
+const sz = v.pictures && v.pictures.sizes;
+const thumb = sz ? sz[Math.min(3,sz.length-1)].link : '';
+const dur = Math.floor(v.duration/60)+':'+String(v.duration%60).padStart(2,'0');
+const date = (v.created_time||'').slice(0,10);
+const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleString() : '';
+const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
+const c = document.createElement('div');
+c.className = 'vimeo-card';
+c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
+'<img src="' + thumb + '" loading="lazy">' +
+'<div class="vimeo-play-icon">&#9654;</div></div>' +
+'<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
+'<div class="vimeo-meta">' + dur + ' · ' + date + plays + '</div>' + desc + '</div>';
+grid.appendChild(c);
+});
+const shown = _vPage * 50;
+btn.style.display = (d.total && shown < d.total) ? 'block' : 'none';
+if (d.total && shown < d.total) _vPage++;
+_vBusy = false;
+}
 
-  async function loadVimeoPage(reset) {
-        if (_vBusy) return; _vBusy = true;
-        const grid = document.getElementById('vimeo-grid');
-        const btn  = document.getElementById('vimeo-more-btn');
-        if (reset) { _vPage = 1; grid.innerHTML = '<div class="vimeo-spinner">Cargando...</div>'; btn.style.display='none'; }
-        const baseQ = 'OLD' + (_vQuery ? ' ' + _vQuery : '');
-        const url = 'https://api.vimeo.com/me/videos?per_page=50&page=' + _vPage +
-                    '&query=' + encodeURIComponent(baseQ) +
-                    '&fields=uri,name,description,duration,created_time,pictures,stats';
-        const d = await fetch(url, { headers:{ Authorization:'bearer ' + VTOK }}).then(r=>r.json());
-        const filtered = (d.data||[]).filter(v => v.name && v.name.toUpperCase().startsWith('OLD'));
-        document.getElementById('vimeo-count').textContent = (d.total||0).toLocaleString() + ' videos';
-        if (reset) grid.innerHTML = '';
-        filtered.forEach(v => {
-          const id = v.uri.split('/').pop();
-          const sz = v.pictures && v.pictures.sizes;
-          const thumb = sz ? sz[Math.min(3,sz.length-1)].link : '';
-          const dur = Math.floor(v.duration/60)+':'+String(v.duration%60).padStart(2,'0');
-          const date = (v.created_time||'').slice(0,10);
-          const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleString() : '';
-          const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
-          const c = document.createElement('div');
-          c.className = 'vimeo-card';
-          c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
-            '<img src="' + thumb + '" loading="lazy">' +
-            '<div class="vimeo-play-icon">&#9654;</div></div>' +
-            '<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
-            '<div class="vimeo-meta">' + dur + ' · ' + date + plays + '</div>' + desc + '</div>';
-          grid.appendChild(c);
-        });
-        const shown = _vPage * 50;
-        btn.style.display = shown < d.total ? 'block' : 'none';
-        if (shown < d.total) _vPage++;
-        _vBusy = false;
-      }
-
-      function playV(id, el) {
-    el.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id +
-      '?autoplay=1" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
-  }
+function playV(id, el) {
+el.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id +
+'?autoplay=1" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
+}
 </script>
 </body>
 </html>
