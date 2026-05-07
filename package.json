@@ -1,0 +1,15 @@
+{
+  "name": "oldelval-archivo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Archivo audiovisual Oldelval - Tronadores",
+  "scripts": {
+    "generate-data": "node scripts/generate-data.js"
+  },
+  "dependencies": {
+    "dropbox": "^10.34.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
