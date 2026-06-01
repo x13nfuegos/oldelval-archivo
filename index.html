@@ -242,13 +242,14 @@ padding: 20px;
 #vimeo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
 .vimeo-card { background:var(--bg2); border-radius:8px; overflow:hidden; border:1px solid var(--border); transition:transform 0.15s,border-color 0.15s; }
 .vimeo-card:hover { transform:translateY(-2px); border-color:var(--accent); }
-.vimeo-thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:#0a0a0a; cursor:pointer; }
+.vimeo-thumb { display:block; position:relative; aspect-ratio:16/9; overflow:hidden; background:#0a0a0a; cursor:pointer; }
 .vimeo-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-.vimeo-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; font-size:2.2rem; }
+.vimeo-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity 0.2s; font-size:2.2rem; color:#fff; }
 .vimeo-thumb:hover .vimeo-play-icon { opacity:1; }
 .vimeo-thumb iframe { width:100%; aspect-ratio:16/9; border:0; display:block; }
 .vimeo-info { padding:9px 11px 10px; }
-.vimeo-title { font-size:0.8rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text1); }
+.vimeo-title { display:block; font-size:0.8rem; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:3px; color:var(--text); text-decoration:none; }
+.vimeo-title:hover { color:var(--accent); }
 .vimeo-desc { font-size:11px; color:#888; padding:2px 8px 6px; line-height:1.4; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
 .vimeo-meta { font-size:0.72rem; color:var(--text3); }
 #vimeo-more-btn { display:none; margin:22px auto 4px; padding:9px 30px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.88rem; font-family:inherit; }
@@ -1012,12 +1013,13 @@ const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleStri
 const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
 const c = document.createElement('div');
 c.className = 'vimeo-card';
-c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + (v.player_embed_url || id) + '\',this)">' +
+const videoLink = v.link || 'https://vimeo.com/' + id;
+c.innerHTML = '<a class="vimeo-thumb" href="' + videoLink + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">' +
 '<img src="' + thumb + '" loading="lazy">' +
-'<div class="vimeo-play-icon">&#9654;</div></div>' +
-'<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
+'<div class="vimeo-play-icon">&#9654;</div></a>' +
+'<div class="vimeo-info"><a class="vimeo-title" href="' + videoLink + '" target="_blank" rel="noopener noreferrer" title="' + escAttr(v.name) + '">' + v.name + '</a>' +
 '<div class="vimeo-meta">' + dur + ' · ' + date + plays +
-'<a class="vimeo-ext-link" href="' + (v.link || 'https://vimeo.com/' + id) + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
+'<a class="vimeo-ext-link" href="' + videoLink + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
 return c;
 }
 
