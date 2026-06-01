@@ -18,12 +18,15 @@
 const fs = require('fs');
 const { Dropbox } = require('dropbox');
 
-const ROOT_PATH = process.env.DROPBOX_ROOT_PATH || '/OLDELVAL';
 const TOKEN = process.env.DROPBOX_ACCESS_TOKEN;
 const REFRESH_TOKEN = process.env.DROPBOX_REFRESH_TOKEN;
 const APP_KEY = process.env.DROPBOX_APP_KEY;
 const APP_SECRET = process.env.DROPBOX_APP_SECRET;
 const TEAM_MEMBER_ID = process.env.DROPBOX_TEAM_MEMBER_ID || '';
+const NAMESPACE_ID = process.env.DROPBOX_NAMESPACE_ID || '2011458723';
+
+const REAL_ROOT = '';
+const VIRTUAL_ROOT = '/OLDELVAL';
 
 const dbxOpts = { fetch };
 if (REFRESH_TOKEN && APP_KEY && APP_SECRET) {
@@ -36,7 +39,9 @@ if (REFRESH_TOKEN && APP_KEY && APP_SECRET) {
   console.error('Missing Dropbox credentials. Provide DROPBOX_REFRESH_TOKEN, DROPBOX_APP_KEY, and DROPBOX_APP_SECRET, or a valid DROPBOX_ACCESS_TOKEN.');
   process.exit(1);
 }
-if (TEAM_MEMBER_ID) {
+if (NAMESPACE_ID) {
+  dbxOpts.pathRoot = JSON.stringify({ '.tag': 'namespace_id', namespace_id: NAMESPACE_ID });
+} else if (TEAM_MEMBER_ID) {
   dbxOpts.selectUser = TEAM_MEMBER_ID;
   dbxOpts.pathRoot = JSON.stringify({ '.tag': 'root', root: 'auto' });
 }
@@ -155,8 +160,8 @@ async function shareLink(path) {
 }
 
 (async () => {
-  console.log('Scanning Dropbox path:', ROOT_PATH);
-  const all = await listFolderRecursive(ROOT_PATH);
+  console.log('Scanning Dropbox namespace root path:', REAL_ROOT);
+  const all = await listFolderRecursive(REAL_ROOT);
   const folders = all.filter(e => e['.tag'] === 'folder');
   const files = all.filter(e => e['.tag'] === 'file');
   console.log(`Found ${folders.length} folders, ${files.length} files`);
@@ -164,11 +169,13 @@ async function shareLink(path) {
   const childFolderCount = new Map();
   const childFileCount = new Map();
   for (const e of folders) {
-    const parent = e.path_display.replace(/\/[^/]+$/, '') || '/';
+    const pt = VIRTUAL_ROOT + e.path_display;
+    const parent = pt.replace(/\/[^/]+$/, '') || VIRTUAL_ROOT;
     childFolderCount.set(parent, (childFolderCount.get(parent) || 0) + 1);
   }
   for (const e of files) {
-    const parent = e.path_display.replace(/\/[^/]+$/, '') || '/';
+    const pt = VIRTUAL_ROOT + e.path_display;
+    const parent = pt.replace(/\/[^/]+$/, '') || VIRTUAL_ROOT;
     childFileCount.set(parent, (childFileCount.get(parent) || 0) + 1);
   }
 
@@ -185,28 +192,28 @@ async function shareLink(path) {
 
   // root entry
   {
-    const parts = ROOT_PATH.split('/').filter(Boolean);
+    const parts = VIRTUAL_ROOT.split('/').filter(Boolean);
     const cl = (parts[0] || '').toUpperCase();
     records.push({
       ns, lv: 1, cl, jo: '',
       nm: parts[parts.length - 1] || cl,
-      pt: ROOT_PATH,
+      pt: VIRTUAL_ROOT,
       dt: '', yr: '', tp: '',
-      fd: childFolderCount.get(ROOT_PATH) || 0,
-      fi: childFileCount.get(ROOT_PATH) || 0,
-      sl: prev.get(ROOT_PATH) || await shareLink(ROOT_PATH),
+      fd: childFolderCount.get(VIRTUAL_ROOT) || 0,
+      fi: childFileCount.get(VIRTUAL_ROOT) || 0,
+      sl: prev.get(VIRTUAL_ROOT) || '',
     });
   }
 
   let i = 0;
   for (const f of folders) {
-    const parts = f.path_display.split('/').filter(Boolean);
+    const pt = VIRTUAL_ROOT + f.path_display;
+    const parts = pt.split('/').filter(Boolean);
     const lv = parts.length;
     const cl = (parts[0] || '').toUpperCase();
     const jo = parts[1] || '';
     const nm = f.name;
-    const pt = f.path_display;
-    const sl = prev.get(pt) || await shareLink(pt);
+    const sl = prev.get(pt) || '';
     records.push({
       ns, lv, cl, jo, nm, pt,
       dt: detectDate(nm),
@@ -223,12 +230,12 @@ async function shareLink(path) {
   console.log(`\nProcessing ${files.length} files...`);
   let fi2 = 0;
   for (const f of files) {
-    const parts = f.path_display.split('/').filter(Boolean);
+    const pt = VIRTUAL_ROOT + f.path_display;
+    const parts = pt.split('/').filter(Boolean);
     const lv = parts.length;
     const cl = (parts[0] || '').toUpperCase();
     const jo = parts[1] || '';
     const nm = f.name;
-    const pt = f.path_display;
     const ext = nm.includes('.') ? nm.split('.').pop().toLowerCase() : '';
     records.push({
       ns, lv, cl, jo, nm, pt,

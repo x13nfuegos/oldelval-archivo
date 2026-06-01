@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const path = req.query.path;
+  let path = req.query.path;
   if (!path || !path.startsWith('/')) {
     res.status(400).json({ error: 'path param required (must start with /)' });
     return;
@@ -58,11 +58,19 @@ export default async function handler(req, res) {
     Authorization: 'Bearer ' + token,
     'Content-Type': 'application/json',
   };
-  // Para cuentas Business con DROPBOX_TEAM_MEMBER_ID
-  const memberId = process.env.DROPBOX_TEAM_MEMBER_ID;
-  if (memberId) {
-    headers['Dropbox-API-Select-User'] = memberId;
-    headers['Dropbox-API-Path-Root'] = JSON.stringify({ '.tag': 'root', root: 'auto' });
+
+  const namespaceId = process.env.DROPBOX_NAMESPACE_ID || '2011458723';
+  if (path.startsWith('/OLDELVAL')) {
+    path = path.substring('/OLDELVAL'.length);
+    if (path === '') path = '/';
+    headers['Dropbox-API-Path-Root'] = JSON.stringify({ '.tag': 'namespace_id', namespace_id: namespaceId });
+  } else {
+    // Para cuentas Business con DROPBOX_TEAM_MEMBER_ID
+    const memberId = process.env.DROPBOX_TEAM_MEMBER_ID;
+    if (memberId) {
+      headers['Dropbox-API-Select-User'] = memberId;
+      headers['Dropbox-API-Path-Root'] = JSON.stringify({ '.tag': 'root', root: 'auto' });
+    }
   }
 
   try {
