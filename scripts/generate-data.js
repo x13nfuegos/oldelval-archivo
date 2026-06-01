@@ -226,31 +226,8 @@ async function shareLink(path) {
     if (++i % 25 === 0) process.stdout.write(`  ${i}/${folders.length}\r`);
   }
 
-  // Archivos individuales — sin generar share links (se resuelven on-demand via /api/dropbox-link)
-  console.log(`\nProcessing ${files.length} files...`);
-  let fi2 = 0;
-  for (const f of files) {
-    const pt = VIRTUAL_ROOT + f.path_display;
-    const parts = pt.split('/').filter(Boolean);
-    const lv = parts.length;
-    const cl = (parts[0] || '').toUpperCase();
-    const jo = parts[1] || '';
-    const nm = f.name;
-    const ext = nm.includes('.') ? nm.split('.').pop().toLowerCase() : '';
-    records.push({
-      ns, lv, cl, jo, nm, pt,
-      dt: detectDate(nm),
-      yr: detectYear(nm, pt),
-      tp: detectTypeFromExt(ext) || detectType(nm, jo),
-      sz: f.size || 0,
-      ext,
-      isFile: true,
-      sl: prev.get(pt) || '',
-    });
-    if (++fi2 % 100 === 0) process.stdout.write(`  ${fi2}/${files.length}\r`);
-  }
-
-  console.log(`\nWriting ${records.length} records to data.json (${folders.length + 1} folders + ${files.length} files)`);
+  // Only index folder entries (individual files are excluded from data.json cards and browsed directly inside Dropbox)
+  console.log(`\nWriting ${records.length} records to data.json (${folders.length + 1} folders)`);
   fs.writeFileSync('data.json', JSON.stringify(records));
   console.log('Done.');
 })().catch(e => { console.error(e); process.exit(1); });
