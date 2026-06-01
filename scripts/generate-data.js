@@ -111,6 +111,10 @@ async function shareLink(path) {
   } catch (e) {
     const tag = e?.error?.error?.['.tag'] || '';
     if (tag === 'shared_link_already_exists') {
+      // Dropbox a veces incluye el link existente directamente en el error
+      const meta = e?.error?.error?.shared_link_already_exists;
+      if (meta?.['.tag'] === 'metadata' && meta?.metadata?.url) return meta.metadata.url;
+      // Si no viene en el error, lo pedimos explícitamente
       try {
         const r = await withRetry(
           () => dbx.sharingListSharedLinks({ path, direct_only: true }),
