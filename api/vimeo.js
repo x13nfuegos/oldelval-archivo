@@ -11,11 +11,13 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { query = '', page = '1', per_page = '50' } = req.query || {};
+  const { query = '', page = '1', per_page = '50', sort = 'date', direction = 'desc' } = req.query || {};
   const params = new URLSearchParams({
     per_page: String(per_page),
     page: String(page),
     query: String(query),
+    sort: String(sort),
+    direction: String(direction),
     fields: 'uri,name,description,duration,created_time,pictures,stats',
   });
 

@@ -992,9 +992,10 @@ let _vTimer;
 function renderVimeoStatic(q) {
 const grid = document.getElementById('vimeo-grid');
 const all = _vAllVideos || [];
-const filtered = q
+const filtered = (q
 ? all.filter(v => v.name && v.name.toLowerCase().includes(q.toLowerCase()))
-: all;
+: [...all]
+).sort((a, b) => (b.created_time || '').localeCompare(a.created_time || ''));
 document.getElementById('vimeo-count').textContent = filtered.length.toLocaleString() + ' videos';
 grid.innerHTML = '';
 filtered.forEach(v => { grid.appendChild(buildVimeoCard(v)); });
@@ -1026,7 +1027,7 @@ const grid = document.getElementById('vimeo-grid');
 const btn = document.getElementById('vimeo-more-btn');
 if (reset) { _vPage = 1; grid.innerHTML = '<div class="vimeo-spinner">Cargando...</div>'; btn.style.display='none'; }
 const baseQ = 'OLD' + (_vQuery ? ' ' + _vQuery : '');
-const url = '/api/vimeo?per_page=50&page=' + _vPage + '&query=' + encodeURIComponent(baseQ);
+const url = '/api/vimeo?per_page=50&page=' + _vPage + '&query=' + encodeURIComponent(baseQ) + '&sort=date&direction=desc';
 let d;
 try { d = await fetch(url).then(r => r.json()); }
 catch (e) { d = { data: [], total: 0 }; }
