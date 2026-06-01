@@ -83,6 +83,24 @@ transition: border-color 0.2s;
 #searchInput:focus { border-color: var(--accent); }
 .stats { display: flex; gap: 16px; font-size: 0.72rem; color: var(--text2); white-space: nowrap; }
 .stats span { color: var(--text); font-weight: 600; }
+.refresh-btn {
+  padding: 5px 12px; font-size: 0.75rem; font-family: inherit; font-weight: 500;
+  background: var(--card); border: 1px solid var(--border2); border-radius: 6px;
+  color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  display: flex; align-items: center; gap: 5px;
+}
+.refresh-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.refresh-status { font-size: 0.72rem; color: var(--text2); padding: 3px 8px; border-radius: 5px; display: none; }
+.refresh-status.ok { background: rgba(34,197,94,0.12); color: #4ade80; display: inline-block; }
+.refresh-status.err { background: rgba(239,68,68,0.12); color: #f87171; display: inline-block; }
+.more-btn {
+  display: none; margin: 20px auto 0; padding: 9px 28px;
+  background: var(--card); border: 1px solid var(--border2); border-radius: 8px;
+  color: var(--text2); font-size: 0.85rem; font-family: inherit; cursor: pointer;
+  transition: all 0.15s;
+}
+.more-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ─── TAB NAV ─── */
 .tab-nav { display: flex; gap: 4px; padding-bottom: 0; }
@@ -151,6 +169,11 @@ display: flex; flex-direction: column; gap: 8px;
 .tp-audio { background: rgba(234,179,8,0.15); color: #fbbf24; }
 .tp-edicion { background: rgba(34,197,94,0.15); color: #4ade80; }
 .tp-entrega { background: rgba(249,115,22,0.15); color: #fb923c; }
+.tp-video { background: rgba(239,68,68,0.15); color: #f87171; }
+.card.is-file { border-left-color: var(--border2); opacity: 0.92; }
+.card.is-file:hover { opacity: 1; }
+.file-ext { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); background: var(--bg2); padding: 1px 5px; border-radius: 4px; }
+.file-size { font-size: 0.68rem; color: var(--text3); }
 .card-name { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.3; }
 .card-date { font-size: 0.72rem; color: var(--text2); }
 .card-path {}
@@ -263,7 +286,12 @@ padding: 20px;
 <svg class="search-ico" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 <input id="searchInput" type="text" placeholder="Buscar por trabajo, carpeta, fecha..." oninput="onSearchInput()" />
 </div>
-<div class="stats">Carpetas: <span id="stat-total">—</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">—</span></div>
+<div class="stats">Carpetas: <span id="stat-total">—</span>&nbsp;&nbsp;Archivos: <span id="stat-files">—</span>&nbsp;&nbsp;Trabajos: <span id="stat-jobs">—</span></div>
+<button id="refreshBtn" class="refresh-btn" onclick="triggerRefresh()" title="Actualizar datos desde Dropbox y Vimeo">
+<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+Actualizar
+</button>
+<span id="refreshStatus" class="refresh-status"></span>
 </div>
 <nav class="tab-nav">
 <button class="tab-btn active" data-tab="archivo" onclick="switchTab('archivo')">📁 Archivo</button>
@@ -277,6 +305,9 @@ padding: 20px;
 <div id="tab-archivo">
 <div class="filters">
 <div class="filter-row">
+<span class="filter-label">Mostrar</span>
+<div class="chips" id="chips-kind"></div>
+<div class="filter-sep"></div>
 <span class="filter-label">Año</span>
 <div class="chips" id="chips-yr"></div>
 <div class="filter-sep"></div>
@@ -302,6 +333,7 @@ padding: 20px;
 <main>
 <div id="loading">Cargando datos…</div>
 <div id="grid"></div>
+<button id="more-btn" class="more-btn" onclick="loadMoreCards()">Cargar más</button>
 </main>
 </div>
 
@@ -385,9 +417,12 @@ const LUGAR_COORDS = {
 'Medanos': [-38.833, -67.950],
 };
 
-let activeYr = 'all', activeTp = 'all', activeJo = 'all', activeLu = 'all';
+let activeYr = 'all', activeTp = 'all', activeJo = 'all', activeLu = 'all', activeKind = 'all';
 let sortVal = 'date-desc';
 let RAW = [];
+let _filtered = [];
+const PAGE_SIZE = 80;
+let _page = 0;
 let mapInstance = null;
 let chartsBuilt = false;
 let activeTab = 'archivo';
@@ -497,16 +532,25 @@ r._date = r.dt ? new Date(r.dt+'T00:00:00').toLocaleDateString('es-AR', dateFmt)
 }
 
 function buildFilters() {
+const folders = RAW.filter(r => !r.isFile);
+const files = RAW.filter(r => r.isFile);
 const jobs = new Set(RAW.map(r => r.jo).filter(Boolean));
-document.getElementById('stat-total').textContent = RAW.length.toLocaleString('es');
+document.getElementById('stat-total').textContent = folders.length.toLocaleString('es');
+document.getElementById('stat-files').textContent = files.length.toLocaleString('es');
 document.getElementById('stat-jobs').textContent = jobs.size;
+
+buildChips('chips-kind',
+['all', 'folder', 'file'],
+v => { activeKind = v; apply(); },
+{},
+{ 'all': 'Todo', 'folder': '📁 Carpetas', 'file': '📄 Archivos' });
 
 const years = [...new Set(RAW.map(r => r.yr).filter(Boolean))].sort((a,b) => b-a);
 buildChips('chips-yr', ['all', ...years], v => { activeYr = v; apply(); });
 
 const types = [...new Set(RAW.map(r => r.tp).filter(Boolean))].sort();
 buildChips('chips-tp', ['all', ...types], v => { activeTp = v; apply(); },
-{ 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦' });
+{ 'Foto':'📷', 'RAW':'🗂', 'Audio':'🎧', 'Edición':'✂️', 'Entrega':'📦', 'Video':'🎬' });
 
 const jobList = [...new Set(RAW.map(r => r.jo).filter(Boolean))].sort();
 buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
@@ -514,12 +558,13 @@ buildChips('chips-jo', ['all', ...jobList], v => { activeJo = v; apply(); });
 buildChips('chips-lu', ['all', ...LUGAR_GROUPS.map(g => g.label)], v => { activeLu = v; apply(); });
 }
 
-function buildChips(containerId, values, onChange, icons={}) {
+function buildChips(containerId, values, onChange, icons={}, labels={}) {
 const wrap = document.getElementById(containerId);
 values.forEach(v => {
 const chip = document.createElement('button');
 chip.className = 'chip' + (v === 'all' ? ' active' : '');
-chip.textContent = (v === 'all') ? 'Todos' : (icons[v] ? icons[v]+' '+v : v);
+const defaultLabel = labels[v] || (v === 'all' ? 'Todos' : (icons[v] ? icons[v]+' '+v : v));
+chip.textContent = defaultLabel;
 chip.addEventListener('click', () => {
 wrap.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
 chip.classList.add('active');
@@ -530,8 +575,16 @@ wrap.appendChild(chip);
 }
 
 function tpClass(tp) {
-const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega' };
+const m = { 'Foto':'tp-foto','RAW':'tp-raw','Audio':'tp-audio','Edición':'tp-edicion','Entrega':'tp-entrega','Video':'tp-video' };
 return m[tp] || '';
+}
+
+function fmtSize(bytes) {
+if (!bytes) return '';
+if (bytes < 1024) return bytes + ' B';
+if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+if (bytes < 1073741824) return (bytes/1048576).toFixed(1) + ' MB';
+return (bytes/1073741824).toFixed(2) + ' GB';
 }
 
 // Escapa caracteres especiales para usar en atributos HTML.
@@ -545,41 +598,43 @@ clearTimeout(_searchTimer);
 _searchTimer = setTimeout(apply, 180);
 }
 
-function apply() {
-const q = document.getElementById('searchInput').value.trim().toLowerCase();
-sortVal = document.getElementById('sortSelect').value;
-
-const filtered = RAW.filter(r => {
-if (activeYr !== 'all' && r.yr !== activeYr) return false;
-if (activeTp !== 'all' && r.tp !== activeTp) return false;
-if (activeJo !== 'all' && r.jo !== activeJo) return false;
-if (activeLu !== 'all' && !r._lu.includes(activeLu)) return false;
-if (q && !r._hay.includes(q)) return false;
-return true;
-});
-
-filtered.sort((a,b) => {
-if (sortVal === 'date-desc') return (b.dt||'').localeCompare(a.dt||'');
-if (sortVal === 'date-asc') return (a.dt||'').localeCompare(b.dt||'');
-if (sortVal === 'name-az') return (a.nm||'').localeCompare(b.nm||'');
-if (sortVal === 'job-az') return (a.jo||'').localeCompare(b.jo||'');
-return 0;
-});
-
-document.getElementById('results-count').textContent = filtered.length.toLocaleString('es') + ' resultados';
-document.getElementById('loading').style.display = 'none';
-document.getElementById('grid').innerHTML = filtered.map(r => {
+function renderCard(r) {
 const name = r.nm || 'Sin nombre';
 const job = r.jo || '';
 const date = r._date || '';
 const yr = r.yr || '';
 const tp = r.tp || '';
 const path = r.pt || '';
-const folders = r.fd ?? 0;
-const files = r.fi ?? 0;
 const lvl = r.lv ?? 0;
 const yrClass = yr ? `yr-${yr}` : '';
 const tpCls = tpClass(tp);
+const isFile = !!r.isFile;
+const fileClass = isFile ? ' is-file' : '';
+
+if (isFile) {
+const sz = fmtSize(r.sz);
+const ext = (r.ext || '').toUpperCase();
+return `<div class="card${yrClass ? ' '+yrClass : ''}${fileClass}" title="${escAttr(path)}">
+<div class="card-top">
+<div class="card-header">
+<span class="card-job">${job}</span>
+<span class="type-badge ${tpCls}">${tp || ext || '—'}</span>
+</div>
+<div class="card-name">${name}</div>
+${date ? `<div class="card-date">📅 ${date}</div>` : ''}
+</div>
+<div class="card-path">${path ? `<a class="dbx-link" href="#" data-pt="${escAttr(path)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${escAttr(path)}</a>` : ''}</div>
+<div class="card-bottom">
+<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Archivo</span>
+${sz ? `<span class="file-size">${sz}</span>` : ''}
+${ext ? `<span class="file-ext">.${ext.toLowerCase()}</span>` : ''}
+<span class="card-level">nv.${lvl}</span>
+</div>
+</div>`;
+}
+
+const subFolders = r.fd ?? 0;
+const subFiles = r.fi ?? 0;
 return `<div class="card ${yrClass}" title="${escAttr(path)}">
 <div class="card-top">
 <div class="card-header">
@@ -589,14 +644,62 @@ ${tp ? `<span class="type-badge ${tpCls}">${tp}</span>` : ''}
 <div class="card-name">${name}</div>
 ${date ? `<div class="card-date">📅 ${date}</div>` : ''}
 </div>
-<div class="card-path">${path ? `<a class="dbx-link" href="#" data-pt="${escAttr(path)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${path}</a>` : ''}</div>
+<div class="card-path">${path ? `<a class="dbx-link" href="#" data-pt="${escAttr(path)}"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L0 6.5 6 11l6-4.5L6 2zM18 2l-6 4.5 6 4.5 6-4.5L18 2zM0 15.5L6 20l6-4.5-6-4.5L0 15.5zM18 11l-6 4.5 6 4.5 6-4.5L18 11z"/></svg>${escAttr(path)}</a>` : ''}</div>
 <div class="card-bottom">
-<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>${folders} carpeta${folders!==1?'s':''}</span>
-${files > 0 ? `<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>${files} archivo${files!==1?'s':''}</span>` : ''}
+<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>${subFolders} carpeta${subFolders!==1?'s':''}</span>
+${subFiles > 0 ? `<span class="card-stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>${subFiles} archivo${subFiles!==1?'s':''}</span>` : ''}
 <span class="card-level">nv.${lvl}</span>
 </div>
 </div>`;
-}).join('');
+}
+
+function renderCards(records, append) {
+const grid = document.getElementById('grid');
+const html = records.map(renderCard).join('');
+if (append) grid.insertAdjacentHTML('beforeend', html);
+else grid.innerHTML = html;
+const btn = document.getElementById('more-btn');
+const shown = (_page + 1) * PAGE_SIZE;
+if (shown < _filtered.length) {
+btn.style.display = 'block';
+btn.textContent = `Cargar más (${(_filtered.length - shown).toLocaleString('es')} restantes)`;
+} else {
+btn.style.display = 'none';
+}
+}
+
+function loadMoreCards() {
+_page++;
+renderCards(_filtered.slice(_page * PAGE_SIZE, (_page + 1) * PAGE_SIZE), true);
+}
+
+function apply() {
+const q = document.getElementById('searchInput').value.trim().toLowerCase();
+sortVal = document.getElementById('sortSelect').value;
+
+_filtered = RAW.filter(r => {
+if (activeKind === 'folder' && r.isFile) return false;
+if (activeKind === 'file' && !r.isFile) return false;
+if (activeYr !== 'all' && r.yr !== activeYr) return false;
+if (activeTp !== 'all' && r.tp !== activeTp) return false;
+if (activeJo !== 'all' && r.jo !== activeJo) return false;
+if (activeLu !== 'all' && !r._lu.includes(activeLu)) return false;
+if (q && !r._hay.includes(q)) return false;
+return true;
+});
+
+_filtered.sort((a,b) => {
+if (sortVal === 'date-desc') return (b.dt||'').localeCompare(a.dt||'');
+if (sortVal === 'date-asc') return (a.dt||'').localeCompare(b.dt||'');
+if (sortVal === 'name-az') return (a.nm||'').localeCompare(b.nm||'');
+if (sortVal === 'job-az') return (a.jo||'').localeCompare(b.jo||'');
+return 0;
+});
+
+_page = 0;
+document.getElementById('results-count').textContent = _filtered.length.toLocaleString('es') + ' resultados';
+document.getElementById('loading').style.display = 'none';
+renderCards(_filtered.slice(0, PAGE_SIZE), false);
 }
 
 // ─── MAP ───
@@ -777,16 +880,74 @@ y: { grid: { color: gridColor } }
 }
 
 // ── VIMEO TAB ────────────────────────────────────────────
-let _vPage = 1, _vQuery = '', _vBusy = false, _vInited = false;
+// ── VIMEO — carga desde vimeo.json (pre-indexado) con fallback al API en vivo ──
+let _vAllVideos = null; // null = no cargado, [] = cargado (puede estar vacío)
+let _vQuery = '', _vInited = false;
+let _vPage = 1, _vBusy = false; // solo para el modo fallback (API en vivo)
 
-function initVimeoTab() {
+async function initVimeoTab() {
 if (_vInited) return; _vInited = true;
+const grid = document.getElementById('vimeo-grid');
+const btn = document.getElementById('vimeo-more-btn');
+grid.innerHTML = '<div class="vimeo-spinner">Cargando...</div>';
+btn.style.display = 'none';
+
+// Intentar cargar desde vimeo.json (generado por el Action)
+try {
+const res = await fetch('/vimeo.json');
+if (res.ok) {
+_vAllVideos = await res.json();
+console.log('Vimeo: cargados', _vAllVideos.length, 'videos desde vimeo.json');
+renderVimeoStatic('');
+document.getElementById('vimeo-search').addEventListener('input', e => {
+clearTimeout(_vTimer);
+_vTimer = setTimeout(() => renderVimeoStatic(e.target.value), 250);
+});
+return;
+}
+} catch {}
+
+// Fallback: API en vivo
+console.log('Vimeo: vimeo.json no disponible, usando API en vivo');
 loadVimeoPage(true);
 let timer;
 document.getElementById('vimeo-search').addEventListener('input', e => {
 clearTimeout(timer);
 timer = setTimeout(() => { _vQuery = e.target.value; _vPage = 1; loadVimeoPage(true); }, 400);
 });
+}
+
+let _vTimer;
+
+function renderVimeoStatic(q) {
+const grid = document.getElementById('vimeo-grid');
+const all = _vAllVideos || [];
+const filtered = q
+? all.filter(v => v.name && v.name.toLowerCase().includes(q.toLowerCase()))
+: all;
+document.getElementById('vimeo-count').textContent = filtered.length.toLocaleString() + ' videos';
+grid.innerHTML = '';
+filtered.forEach(v => { grid.appendChild(buildVimeoCard(v)); });
+document.getElementById('vimeo-more-btn').style.display = 'none';
+}
+
+function buildVimeoCard(v) {
+const id = v.uri.split('/').pop();
+const sz = v.pictures && v.pictures.sizes;
+const thumb = sz ? sz[Math.min(3, sz.length-1)].link : '';
+const dur = Math.floor(v.duration/60)+':'+String(v.duration%60).padStart(2,'0');
+const date = (v.created_time||'').slice(0,10);
+const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleString() : '';
+const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
+const c = document.createElement('div');
+c.className = 'vimeo-card';
+c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
+'<img src="' + thumb + '" loading="lazy">' +
+'<div class="vimeo-play-icon">&#9654;</div></div>' +
+'<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
+'<div class="vimeo-meta">' + dur + ' · ' + date + plays +
+'<a class="vimeo-ext-link" href="https://vimeo.com/' + id + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
+return c;
 }
 
 async function loadVimeoPage(reset) {
@@ -802,24 +963,7 @@ catch (e) { d = { data: [], total: 0 }; }
 const filtered = (d.data||[]).filter(v => v.name && v.name.toUpperCase().startsWith('OLD'));
 document.getElementById('vimeo-count').textContent = (d.total||0).toLocaleString() + ' videos';
 if (reset) grid.innerHTML = '';
-filtered.forEach(v => {
-const id = v.uri.split('/').pop();
-const sz = v.pictures && v.pictures.sizes;
-const thumb = sz ? sz[Math.min(3,sz.length-1)].link : '';
-const dur = Math.floor(v.duration/60)+':'+String(v.duration%60).padStart(2,'0');
-const date = (v.created_time||'').slice(0,10);
-const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleString() : '';
-const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
-const c = document.createElement('div');
-c.className = 'vimeo-card';
-c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
-'<img src="' + thumb + '" loading="lazy">' +
-'<div class="vimeo-play-icon">&#9654;</div></div>' +
-'<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
-'<div class="vimeo-meta">' + dur + ' · ' + date + plays +
-'<a class="vimeo-ext-link" href="https://vimeo.com/' + id + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
-grid.appendChild(c);
-});
+filtered.forEach(v => { grid.appendChild(buildVimeoCard(v)); });
 const shown = _vPage * 50;
 btn.style.display = (d.total && shown < d.total) ? 'block' : 'none';
 if (d.total && shown < d.total) _vPage++;
@@ -829,6 +973,34 @@ _vBusy = false;
 function playV(id, el) {
 el.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id +
 '?autoplay=1" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
+}
+
+// ── ACTUALIZAR DATOS ──────────────────────────────────────────────────────────
+async function triggerRefresh() {
+const btn = document.getElementById('refreshBtn');
+const status = document.getElementById('refreshStatus');
+btn.disabled = true;
+status.className = 'refresh-status';
+status.textContent = '';
+try {
+const d = await fetch('/api/refresh', { method: 'POST' }).then(r => r.json());
+if (d.ok) {
+status.textContent = '✓ ' + d.message;
+status.className = 'refresh-status ok';
+} else {
+status.textContent = '✗ Error: ' + (d.error || 'desconocido');
+status.className = 'refresh-status err';
+}
+} catch (e) {
+status.textContent = '✗ Error de red';
+status.className = 'refresh-status err';
+} finally {
+setTimeout(() => {
+btn.disabled = false;
+status.className = 'refresh-status';
+status.textContent = '';
+}, 7000);
+}
 }
 </script>
 </body>
