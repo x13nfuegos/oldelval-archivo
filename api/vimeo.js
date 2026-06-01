@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     query: String(query),
     sort: String(sort),
     direction: String(direction),
-    fields: 'uri,name,description,duration,created_time,pictures,stats',
+    fields: 'uri,name,description,duration,created_time,pictures,stats,link,player_embed_url',
   });
 
   try {

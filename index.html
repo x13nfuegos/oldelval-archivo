@@ -1012,12 +1012,12 @@ const plays = v.stats && v.stats.plays ? ' · ► ' + v.stats.plays.toLocaleStri
 const desc = v.description ? '<div class="vimeo-desc">' + v.description.slice(0,100) + (v.description.length>100?'...':'') + '</div>' : '';
 const c = document.createElement('div');
 c.className = 'vimeo-card';
-c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + id + '\',this)">' +
+c.innerHTML = '<div class="vimeo-thumb" onclick="playV(\'' + (v.player_embed_url || id) + '\',this)">' +
 '<img src="' + thumb + '" loading="lazy">' +
 '<div class="vimeo-play-icon">&#9654;</div></div>' +
 '<div class="vimeo-info"><div class="vimeo-title">' + v.name + '</div>' +
 '<div class="vimeo-meta">' + dur + ' · ' + date + plays +
-'<a class="vimeo-ext-link" href="https://vimeo.com/' + id + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
+'<a class="vimeo-ext-link" href="' + (v.link || 'https://vimeo.com/' + id) + '" target="_blank" rel="noopener noreferrer" title="Abrir en Vimeo">↗ Vimeo</a></div>' + desc + '</div>';
 return c;
 }
 
@@ -1041,9 +1041,11 @@ if (d.total && shown < d.total) _vPage++;
 _vBusy = false;
 }
 
-function playV(id, el) {
-el.innerHTML = '<iframe src="https://player.vimeo.com/video/' + id +
-'?autoplay=1" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
+function playV(embedUrlOrId, el) {
+  const url = embedUrlOrId.startsWith('http')
+    ? embedUrlOrId + (embedUrlOrId.includes('?') ? '&' : '?') + 'autoplay=1'
+    : 'https://player.vimeo.com/video/' + embedUrlOrId + '?autoplay=1';
+  el.innerHTML = '<iframe src="' + url + '" style="width:100%;height:100%;border:0" allow="autoplay;fullscreen" allowfullscreen></iframe>';
 }
 
 // ── ACTUALIZAR DATOS ──────────────────────────────────────────────────────────

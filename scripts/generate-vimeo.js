@@ -15,7 +15,7 @@ if (!TOKEN) {
   process.exit(1);
 }
 
-const FIELDS = 'uri,name,description,duration,created_time,pictures,stats';
+const FIELDS = 'uri,name,description,duration,created_time,pictures,stats,link,player_embed_url';
 const PER_PAGE = 100;
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
