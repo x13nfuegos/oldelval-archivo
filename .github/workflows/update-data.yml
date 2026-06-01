@@ -23,6 +23,9 @@ jobs:
       - name: Generate data.json (Dropbox)
         env:
           DROPBOX_ACCESS_TOKEN: ${{ secrets.DROPBOX_ACCESS_TOKEN }}
+          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+          DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
+          DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
           DROPBOX_TEAM_MEMBER_ID: ${{ secrets.DROPBOX_TEAM_MEMBER_ID }}
           DROPBOX_ROOT_PATH: ${{ secrets.DROPBOX_ROOT_PATH }}
         run: node scripts/generate-data.js
