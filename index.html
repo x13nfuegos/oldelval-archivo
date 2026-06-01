@@ -256,6 +256,52 @@ padding: 20px;
 .vimeo-spinner { text-align:center; padding:40px; color:var(--text3); font-size:0.9rem; }
 .vimeo-ext-link { color:var(--text3); text-decoration:none; font-size:0.7rem; margin-left:6px; opacity:0.7; transition:opacity 0.15s; }
 .vimeo-ext-link:hover { opacity:1; color:var(--accent); }
+
+/* Toast Notification (Premium Theme) */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+}
+.toast {
+  background: var(--bg2, #1e1e1e);
+  color: var(--text1, #ffffff);
+  border: 1px solid var(--border, #333333);
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+}
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.toast-error {
+  border-color: #ff4a4a;
+  background: #2a1515;
+}
+.toast-success {
+  border-color: #4aff4a;
+  background: #152a15;
+}
+.toast-close {
+  cursor: pointer;
+  opacity: 0.6;
+  font-weight: bold;
+}
+.toast-close:hover {
+  opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -467,6 +513,28 @@ if (tab === 'mapa' && RAW.length) initMap();
 if (tab === 'analytics' && RAW.length && !chartsBuilt) buildCharts();
 }
 
+// ─── TOAST NOTIFICATION ───
+function showToast(message, type = 'error') {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <span>${message}</span>
+    <span class="toast-close" onclick="this.parentElement.remove()">&times;</span>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 6000);
+}
+
 // ─── DROPBOX LINK (lazy, público) ───
 // Cache en memoria para no volver a pedir el mismo link durante la sesión.
 const _slCache = new Map();
@@ -494,10 +562,12 @@ _slCache.set(pt, d.url);
 if (win && !win.closed) win.location.href = d.url;
 } else {
 if (win) win.close();
+showToast('No se pudo obtener el enlace de Dropbox. Es probable que las credenciales del servidor estén vencidas o sean incorrectas.', 'error');
 console.warn('dropbox-link:', d.error, d.detail);
 }
 } catch (err) {
 if (win) win.close();
+showToast('Error de red al intentar conectar con el servidor de Dropbox.', 'error');
 console.error('dropbox-link fetch error:', err);
 } finally {
 a.classList.remove('loading');

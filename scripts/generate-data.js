@@ -20,14 +20,22 @@ const { Dropbox } = require('dropbox');
 
 const ROOT_PATH = process.env.DROPBOX_ROOT_PATH || '/OLDELVAL';
 const TOKEN = process.env.DROPBOX_ACCESS_TOKEN;
+const REFRESH_TOKEN = process.env.DROPBOX_REFRESH_TOKEN;
+const APP_KEY = process.env.DROPBOX_APP_KEY;
+const APP_SECRET = process.env.DROPBOX_APP_SECRET;
 const TEAM_MEMBER_ID = process.env.DROPBOX_TEAM_MEMBER_ID || '';
 
-if (!TOKEN) {
-  console.error('Missing DROPBOX_ACCESS_TOKEN env var');
+const dbxOpts = { fetch };
+if (REFRESH_TOKEN && APP_KEY && APP_SECRET) {
+  dbxOpts.refreshToken = REFRESH_TOKEN;
+  dbxOpts.clientId = APP_KEY;
+  dbxOpts.clientSecret = APP_SECRET;
+} else if (TOKEN) {
+  dbxOpts.accessToken = TOKEN;
+} else {
+  console.error('Missing Dropbox credentials. Provide DROPBOX_REFRESH_TOKEN, DROPBOX_APP_KEY, and DROPBOX_APP_SECRET, or a valid DROPBOX_ACCESS_TOKEN.');
   process.exit(1);
 }
-
-const dbxOpts = { accessToken: TOKEN, fetch };
 if (TEAM_MEMBER_ID) {
   dbxOpts.selectUser = TEAM_MEMBER_ID;
   dbxOpts.pathRoot = JSON.stringify({ '.tag': 'root', root: 'auto' });

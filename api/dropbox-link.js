@@ -2,13 +2,49 @@
 // Mantiene el token en el servidor y cachea la respuesta 24 h en el CDN.
 //
 // Configure en Vercel: Settings → Environment Variables
-//   DROPBOX_ACCESS_TOKEN     (Production + Preview)
-//   DROPBOX_TEAM_MEMBER_ID   (opcional, para espacios de equipo Business)
+//   DROPBOX_REFRESH_TOKEN    (Recomendado: Token de refresco de OAuth2)
+//   DROPBOX_APP_KEY          (Recomendado: App Key de Dropbox)
+//   DROPBOX_APP_SECRET       (Recomendado: App Secret de Dropbox)
+//   DROPBOX_ACCESS_TOKEN     (Fallback/Legacy: Token estático)
+//   DROPBOX_TEAM_MEMBER_ID   (Opcional, para espacios de equipo Business)
+
+async function getAccessToken() {
+  const refreshToken = process.env.DROPBOX_REFRESH_TOKEN;
+  const appKey = process.env.DROPBOX_APP_KEY;
+  const appSecret = process.env.DROPBOX_APP_SECRET;
+
+  if (refreshToken && appKey && appSecret) {
+    const response = await fetch('https://api.dropboxapi.com/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: appKey,
+        client_secret: appSecret,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to refresh token: ${response.statusText} (${await response.text()})`);
+    }
+    const data = await response.json();
+    return data.access_token;
+  }
+
+  const staticToken = process.env.DROPBOX_ACCESS_TOKEN;
+  if (staticToken) {
+    return staticToken;
+  }
+
+  throw new Error('No Dropbox credentials configured. Provide DROPBOX_REFRESH_TOKEN, DROPBOX_APP_KEY, and DROPBOX_APP_SECRET, or DROPBOX_ACCESS_TOKEN.');
+}
 
 export default async function handler(req, res) {
-  const token = process.env.DROPBOX_ACCESS_TOKEN;
-  if (!token) {
-    res.status(500).json({ error: 'DROPBOX_ACCESS_TOKEN not configured' });
+  let token;
+  try {
+    token = await getAccessToken();
+  } catch (err) {
+    res.status(500).json({ error: 'Dropbox authentication failed', detail: err.message });
     return;
   }
 
