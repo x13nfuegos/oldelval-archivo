@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - run: npm ci || npm install
+      - run: npm ci
 
       - name: Generate data.json (Dropbox)
         env:
@@ -28,6 +28,7 @@ jobs:
         run: node scripts/generate-data.js
 
       - name: Generate vimeo.json
+        continue-on-error: true
         env:
           VIMEO_TOKEN: ${{ secrets.VIMEO_TOKEN }}
         run: node scripts/generate-vimeo.js
