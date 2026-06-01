@@ -42,9 +42,25 @@ const TYPE_PATTERNS = [
   { tp: 'Entrega', re: /(?:\b|_)entregas?(?:\b|_)/i },
 ];
 
+// Tipos detectados a partir de la extensión del archivo
+const EXT_TYPES = [
+  { tp: 'RAW',     re: /^(dng|cr2|cr3|arw|nef|orf|rw2|raw)$/ },
+  { tp: 'Foto',    re: /^(jpe?g|png|tiff?|heic|webp|bmp|gif)$/ },
+  { tp: 'Video',   re: /^(mp4|mov|avi|mkv|mxf|r3d|m2ts|mts|wmv|flv|prores)$/ },
+  { tp: 'Audio',   re: /^(mp3|wav|aac|flac|ogg|m4a|aiff?)$/ },
+  { tp: 'Edición', re: /^(prproj|aep|ppro|fcp|fcpx|drp)$/ },
+  { tp: 'Entrega', re: /^(pdf|zip|rar|7z|docx?|xlsx?|pptx?)$/ },
+];
+
 function detectType(...haystacks) {
   const s = haystacks.join(' ');
   for (const p of TYPE_PATTERNS) if (p.re.test(s)) return p.tp;
+  return '';
+}
+
+function detectTypeFromExt(ext) {
+  const e = (ext || '').toLowerCase();
+  for (const p of EXT_TYPES) if (p.re.test(e)) return p.tp;
   return '';
 }
 
@@ -111,6 +127,10 @@ async function shareLink(path) {
   } catch (e) {
     const tag = e?.error?.error?.['.tag'] || '';
     if (tag === 'shared_link_already_exists') {
+      // Dropbox a veces incluye el link existente directamente en el error
+      const meta = e?.error?.error?.shared_link_already_exists;
+      if (meta?.['.tag'] === 'metadata' && meta?.metadata?.url) return meta.metadata.url;
+      // Si no viene en el error, lo pedimos explícitamente
       try {
         const r = await withRetry(
           () => dbx.sharingListSharedLinks({ path, direct_only: true }),
@@ -191,7 +211,31 @@ async function shareLink(path) {
     if (++i % 25 === 0) process.stdout.write(`  ${i}/${folders.length}\r`);
   }
 
-  console.log(`\nWriting ${records.length} records to data.json`);
+  // Archivos individuales — sin generar share links (se resuelven on-demand via /api/dropbox-link)
+  console.log(`\nProcessing ${files.length} files...`);
+  let fi2 = 0;
+  for (const f of files) {
+    const parts = f.path_display.split('/').filter(Boolean);
+    const lv = parts.length;
+    const cl = (parts[0] || '').toUpperCase();
+    const jo = parts[1] || '';
+    const nm = f.name;
+    const pt = f.path_display;
+    const ext = nm.includes('.') ? nm.split('.').pop().toLowerCase() : '';
+    records.push({
+      ns, lv, cl, jo, nm, pt,
+      dt: detectDate(nm),
+      yr: detectYear(nm, pt),
+      tp: detectTypeFromExt(ext) || detectType(nm, jo),
+      sz: f.size || 0,
+      ext,
+      isFile: true,
+      sl: prev.get(pt) || '',
+    });
+    if (++fi2 % 100 === 0) process.stdout.write(`  ${fi2}/${files.length}\r`);
+  }
+
+  console.log(`\nWriting ${records.length} records to data.json (${folders.length + 1} folders + ${files.length} files)`);
   fs.writeFileSync('data.json', JSON.stringify(records));
   console.log('Done.');
 })().catch(e => { console.error(e); process.exit(1); });
